@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto text-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" width="100" class="mb-3">
+        <h2 class="fw-bold mb-3">Chào mừng bạn quay lại!</h2>
+        <p class="lead text-muted">Hôm nay bạn muốn học gì?</p>
+        
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mt-4">
+            <a href="/topics" class="btn btn-success btn-lg px-4 gap-3">Học bài mới</a>
+            <a href="/review" class="btn btn-outline-secondary btn-lg px-4">Ôn tập bài cũ</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

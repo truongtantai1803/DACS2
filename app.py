@@ -44,7 +44,66 @@ def home():
 @app.route('/topics')
 def topics():
     if 'user' not in session: return redirect(url_for('login'))
-    return render_template('base.html', page_name='topics', content="Giao diện Chủ đề")
+    
+    # Cấu trúc dữ liệu mới: Danh sách các NHÓM CHỦ ĐỀ
+    categories = [
+        {
+            'name': 'Daily English Conversation',
+            'icon': 'fa-comments',
+            'videos': [
+                {
+                    'title': '100 Common English Phrases',
+                    'desc': 'Các mẫu câu giao tiếp thông dụng nhất hàng ngày.',
+                    'thumbnail': 'https://img.youtube.com/vi/aFnU_H13J8s/maxresdefault.jpg',
+                    'duration': '15:30',
+                    'level': 'Dễ'
+                },
+                {
+                    'title': 'At the Coffee Shop',
+                    'desc': 'Cách gọi đồ uống và thanh toán tại quán cà phê.',
+                    'thumbnail': 'https://img.youtube.com/vi/caW3jU9Xq5I/maxresdefault.jpg',
+                    'duration': '08:45',
+                    'level': 'Dễ'
+                },
+                {
+                    'title': 'Talking about Weather',
+                    'desc': 'Chủ đề thời tiết - Cách bắt chuyện tự nhiên nhất.',
+                    'thumbnail': 'https://img.youtube.com/vi/D0n0p2-fN6Y/maxresdefault.jpg',
+                    'duration': '06:20',
+                    'level': 'Trung bình'
+                }
+            ]
+        },
+        {
+            'name': 'US-UK Songs',
+            'icon': 'fa-music',
+            'videos': [
+                {
+                    'title': 'Perfect - Ed Sheeran',
+                    'desc': 'Học từ vựng lãng mạn qua bài hát Perfect.',
+                    'thumbnail': 'https://img.youtube.com/vi/2Vv-BfVoq4g/maxresdefault.jpg',
+                    'duration': '04:23',
+                    'level': 'Trung bình'
+                },
+                {
+                    'title': 'Someone Like You - Adele',
+                    'desc': 'Luyện phát âm giọng Anh-Anh chuẩn cùng Adele.',
+                    'thumbnail': 'https://img.youtube.com/vi/hLQl3WQQoQ0/maxresdefault.jpg',
+                    'duration': '04:45',
+                    'level': 'Khó'
+                },
+                {
+                    'title': 'A Thousand Years',
+                    'desc': 'Bài hát đám cưới kinh điển - Christina Perri.',
+                    'thumbnail': 'https://img.youtube.com/vi/rtOvBOTyX00/maxresdefault.jpg',
+                    'duration': '04:50',
+                    'level': 'Dễ'
+                }
+            ]
+        }
+    ]
+    
+    return render_template('topics.html', page_name='topics', categories=categories)
 
 @app.route('/review')
 def review():

@@ -1,16 +1,150 @@
 {% extends "base.html" %}
 
+{% block title %}Trang chủ{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-8 mx-auto text-center">
-        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" width="100" class="mb-3">
-        <h2 class="fw-bold mb-3">Chào mừng bạn quay lại!</h2>
-        <p class="lead text-muted">Hôm nay bạn muốn học gì?</p>
-        
-        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mt-4">
-            <a href="/topics" class="btn btn-success btn-lg px-4 gap-3">Học bài mới</a>
-            <a href="/review" class="btn btn-outline-secondary btn-lg px-4">Ôn tập bài cũ</a>
+
+<div class="px-4 py-5 my-5 text-center">
+    <i class="fas fa-dove text-success mb-4" style="font-size: 80px;"></i>
+    
+    <h1 class="display-5 fw-bold text-dark">Học ngoại ngữ miễn phí, mãi mãi.</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4 text-muted">
+            Cách học ngoại ngữ thông minh, vui nhộn và hiệu quả dành cho người mới bắt đầu. 
+            Chỉ 15 phút mỗi ngày để chinh phục mục tiêu của bạn.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="/topics" class="btn btn-success btn-lg px-4 gap-3 fw-bold rounded-pill">
+                BẮT ĐẦU HỌC NGAY
+            </a>
         </div>
     </div>
 </div>
+
+<div class="container px-4 py-5" id="features">
+    <h2 class="pb-2 border-bottom text-center text-success fw-bold">Cách học hiệu quả</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-4 text-center">
+        
+        <div class="col">
+            <div class="feature-icon bg-light text-success rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                <i class="fas fa-clone fs-2"></i>
+            </div>
+            <h3 class="fs-5 fw-bold">Flashcards Thông Minh</h3>
+            <p class="text-muted">Ghi nhớ từ vựng lâu hơn nhờ phương pháp lặp lại ngắt quãng.</p>
+        </div>
+
+        <div class="col">
+            <div class="feature-icon bg-light text-success rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                <i class="fas fa-microphone-alt fs-2"></i>
+            </div>
+            <h3 class="fs-5 fw-bold">Luyện nói Shadowing</h3>
+            <p class="text-muted">Công nghệ nhận diện giọng nói giúp bạn phát âm chuẩn bản xứ.</p>
+        </div>
+
+        <div class="col">
+            <div class="feature-icon bg-light text-success rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                <i class="fas fa-tasks fs-2"></i>
+            </div>
+            <h3 class="fs-5 fw-bold">Bài tập Đa dạng</h3>
+            <p class="text-muted">Kiểm tra trình độ liên tục qua các bài Quiz trắc nghiệm thú vị.</p>
+        </div>
+
+        <div class="col">
+            <div class="feature-icon bg-light text-success rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                <i class="fas fa-chart-line fs-2"></i>
+            </div>
+            <h3 class="fs-5 fw-bold">Theo dõi Tiến độ</h3>
+            <p class="text-muted">Biểu đồ trực quan giúp bạn duy trì thói quen học tập mỗi ngày.</p>
+        </div>
+    </div>
+</div>
+
+<div class="bg-light py-5 rounded-3">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-dark">Tại sao bạn sẽ thích Turtle?</h2>
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="fas fa-check-circle text-success mt-1 me-3 fs-4"></i>
+                        <div>
+                            <strong>Cá nhân hóa bằng AI:</strong> 
+                            <span class="text-muted">Bài học tự điều chỉnh độ khó dựa trên năng lực của bạn.</span>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="fas fa-check-circle text-success mt-1 me-3 fs-4"></i>
+                        <div>
+                            <strong>Nội dung thực tế:</strong> 
+                            <span class="text-muted">Từ vựng chuyên ngành Công nghệ, Du lịch sát với đời sống.</span>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="fas fa-check-circle text-success mt-1 me-3 fs-4"></i>
+                        <div>
+                            <strong>Cộng đồng hỗ trợ:</strong> 
+                            <span class="text-muted">Trao đổi, thi đua cùng hàng ngàn người học khác.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6 text-center">
+                <div class="p-5 bg-white shadow-sm rounded-3">
+                    <i class="fas fa-rocket text-warning" style="font-size: 120px;"></i>
+                    <p class="mt-3 fw-bold text-secondary">Học nhanh hơn, nhớ lâu hơn</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <h2 class="text-center fw-bold mb-5">Khám phá các chủ đề phổ biến</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm hover-effect">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 text-primary"><i class="fas fa-plane-departure fs-1"></i></div>
+                    <h5 class="card-title fw-bold">Du lịch & Khám phá</h5>
+                    <p class="card-text text-muted small">Hỏi đường, đặt phòng khách sạn, giao tiếp tại sân bay.</p>
+                    <a href="/topics" class="btn btn-outline-primary rounded-pill mt-2">Học thử</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm hover-effect">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 text-danger"><i class="fas fa-laptop-code fs-1"></i></div>
+                    <h5 class="card-title fw-bold">Công nghệ thông tin</h5>
+                    <p class="card-text text-muted small">Tiếng Anh chuyên ngành cho dân IT, AI và Lập trình.</p>
+                    <a href="/topics" class="btn btn-outline-danger rounded-pill mt-2">Học thử</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm hover-effect">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 text-warning"><i class="fas fa-comments fs-1"></i></div>
+                    <h5 class="card-title fw-bold">Giao tiếp Cơ bản</h5>
+                    <p class="card-text text-muted small">Chào hỏi, giới thiệu bản thân và các hội thoại hàng ngày.</p>
+                    <a href="/topics" class="btn btn-outline-warning rounded-pill mt-2">Học thử</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* CSS nhỏ để tạo hiệu ứng hover cho Card */
+    .hover-effect:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
+
 {% endblock %}

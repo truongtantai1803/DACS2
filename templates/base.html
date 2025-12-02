@@ -2,19 +2,33 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Học Tiếng Anh Online</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        /* CSS Menu */
         .navbar-custom { background-color: #ffffff; border-bottom: 2px solid #e5e5e5; padding: 10px 0; }
         .nav-link { color: #777; font-weight: bold; text-transform: uppercase; margin: 0 10px; font-size: 0.85rem; }
         .nav-link:hover { color: #58cc02; }
-        .nav-link.active { color: #58cc02; border-bottom: 2px solid #58cc02; } /* Nút đang chọn sẽ màu xanh */
+        .nav-link.active { color: #58cc02; border-bottom: 2px solid #58cc02; }
         .btn-logout { border: 2px solid #e5e5e5; color: #777; border-radius: 10px; font-weight: bold; }
         .btn-logout:hover { background: #f0f0f0; }
+
+        /* CSS Footer */
+        .footer-custom {
+            background-color: #f8f9fa; /* Màu nền xám nhẹ */
+            border-top: 1px solid #e5e5e5;
+            padding: 30px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: auto; /* Đẩy footer xuống đáy */
+        }
+        .footer-custom p { margin-bottom: 5px; } /* Khoảng cách giữa các dòng */
     </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
         <div class="container">
@@ -39,7 +53,7 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container mt-4 mb-5">
         {% block content %}
             <div class="text-center mt-5">
                 <h1 class="text-muted">{{ content }}</h1>
@@ -48,5 +62,19 @@
         {% endblock %}
     </div>
 
+    <footer class="footer-custom text-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <p class="fw-bold text-dark">Copyright © Trương Tấn Tài</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>Địa chỉ: Khu Đô thị Đại học Đà Nẵng, Đường Nam Kỳ Khởi Nghĩa, quận Ngũ Hành Sơn, TP. Đà Nẵng</p>
+                    <p><i class="fas fa-phone me-2"></i>Điện thoại: 0977947005</p>
+                    <p><i class="fas fa-phone me-2"></i>Email: taitt.24ai@vku.udn.vn</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

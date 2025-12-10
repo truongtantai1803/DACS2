@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Bảng Xếp Hạng{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    
+    <!-- HEADER GIẢI ĐẤU -->
+    <div class="text-center mb-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/6455/6455061.png" width="80" class="mb-3">
+        <h2 class="fw-bold text-dark">Giải đấu Kim Cương</h2>
+        <p class="text-muted">Top 10 người học chăm chỉ nhất tuần này</p>
+        <div class="d-inline-block bg-warning bg-opacity-10 text-warning px-3 py-1 rounded-pill fw-bold small">
+            <i class="fas fa-clock me-1"></i> Kết thúc trong 2 ngày
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <!-- DANH SÁCH BẢNG XẾP HẠNG -->
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+                <div class="list-group list-group-flush">
+                    
+                    {% for user in leaderboard %}
+                    <div class="list-group-item py-3 px-4 d-flex align-items-center border-bottom-0 {% if loop.last == false %}border-bottom{% endif %} hover-bg">
+                        
+                        <!-- Cột 1: Thứ hạng -->
+                        <div class="me-3 text-center" style="width: 30px;">
+                            {% if user.rank == 1 %}
+                                <i class="fas fa-crown text-warning fs-4"></i>
+                            {% elif user.rank == 2 %}
+                                <i class="fas fa-medal text-secondary fs-4"></i>
+                            {% elif user.rank == 3 %}
+                                <i class="fas fa-medal text-danger fs-4" style="color: #cd7f32 !important;"></i> <!-- Màu đồng -->
+                            {% else %}
+                                <span class="fw-bold text-muted">{{ user.rank }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Cột 2: Avatar -->
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background={{ user.avatar_color }}&color=fff&size=40" class="rounded-circle me-3" width="40" height="40">
+
+                        <!-- Cột 3: Tên -->
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold mb-0 text-dark">{{ user.username }}</h6>
+                            {% if user.rank <= 3 %}
+                                <small class="text-success" style="font-size: 0.7rem;">Đang bứt phá! 🔥</small>
+                            {% endif %}
+                        </div>
+
+                        <!-- Cột 4: Điểm XP -->
+                        <div class="text-end">
+                            <span class="fw-bold text-primary">{{ user.xp }} XP</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- THANH CỦA TÔI (STICKY BOTTOM) -->
+<div class="fixed-bottom mb-3" style="pointer-events: none;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <!-- Card của mình -->
+                <div class="card border-2 border-primary shadow-lg rounded-4 overflow-hidden" style="pointer-events: auto; background-color: #f0f8ff;">
+                    <div class="card-body py-3 px-4 d-flex align-items-center">
+                        
+                        <!-- Rank -->
+                        <div class="me-3 text-center" style="width: 30px;">
+                            <span class="fw-bold text-dark">{{ my_rank.rank }}</span>
+                        </div>
+
+                        <!-- Avatar -->
+                        <img src="https://ui-avatars.com/api/?name={{ my_rank.username }}&background={{ my_rank.avatar_color }}&color=fff&size=40" class="rounded-circle me-3 border border-2 border-primary" width="40" height="40">
+
+                        <!-- Tên -->
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold mb-0 text-primary">{{ my_rank.username }} (Bạn)</h6>
+                        </div>
+
+                        <!-- XP -->
+                        <div class="text-end">
+                            <span class="fw-bold text-primary">{{ my_rank.xp }} XP</span>
+                            <i class="fas fa-arrow-up text-success ms-2 small"></i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Hiệu ứng hover cho từng dòng */
+    .hover-bg { transition: background-color 0.2s; }
+    .hover-bg:hover { background-color: #f8f9fa; }
+    
+    /* Đẩy nội dung lên để không bị thanh bottom che mất */
+    body { padding-bottom: 80px; }
+</style>
+
+{% endblock %}
+```
+
+### Cách chạy thử:
+1.  Chạy lại `python app.py`.
+2.  Vào menu **BXH** (Leaderboard).
+3.  Bạn sẽ thấy danh sách Top 10 người dùng giả lập.
+4.  Nhìn xuống dưới đáy màn hình, bạn sẽ thấy một thanh nổi hiển thị thứ hạng của chính bạn (Rank 15), giúp bạn so sánh điểm số của mình với top trên.
+
+Giao diện này rất sạch sẽ và giống phong cách của các ứng dụng học tập hiện nay.

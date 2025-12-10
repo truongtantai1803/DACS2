@@ -9,3 +9,4 @@
 #### Nếu trong thư mục instance đã có file site.db, Thầy vui lòng XÓA file site.db đi để đảm bảo ứng dụng tạo lại cơ sở dữ liệu mới nhất với đầy đủ các bảng.
 #### B6: Gõ lệnh sau vào terminal: python app.py
 #### Khi thấy dòng thông báo sau hiện ra nghĩa là đã thành công: * Running on http://127.0.0.1:5000 => Thầy ấn Ctrl + nhấn vào link là hiện web.
+### Thầy tạo tài khoản mật khẩu là tự động đăng nhập vào web ạ

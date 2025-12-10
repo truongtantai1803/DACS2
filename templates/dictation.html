@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}Nghe chép chính tả - {{ video.title }}{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-3" style="height: calc(100vh - 60px); background-color: #f8f9fa; overflow: hidden;">
+    <div class="row h-100 g-3">
+        
+        <div class="col-lg-4 h-100 d-flex flex-column">
+            <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 flex-shrink-0">
+                <div class="card-header bg-white border-0 fw-bold d-flex justify-content-between align-items-center py-2">
+                    <span>Video</span>
+                    <span class="badge bg-light text-secondary border"><i class="far fa-clock"></i> <span id="timeDisplay">0:00</span></span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="ratio ratio-16x9 bg-black">
+                        <div id="youtube-player"></div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white p-3">
+                    <h6 class="fw-bold text-dark mb-2 text-truncate">{{ video.title }}</h6>
+                    <div class="d-flex gap-2">
+                        <button id="btnPlay" class="btn btn-dark-blue w-100 fw-bold py-2 shadow-sm btn-sm" onclick="togglePlay()">
+                            <i class="fas fa-play me-2"></i> Bắt đầu
+                        </button>
+                        <button class="btn btn-info-light w-100 fw-bold py-2 shadow-sm btn-sm" onclick="replaySegment()">
+                            <i class="fas fa-redo me-2"></i> Phát lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/topics" class="btn btn-light border w-100 mt-auto fw-bold text-secondary py-3 rounded-4 shadow-sm">
+                <i class="fas fa-arrow-left me-2"></i> Quay lại thư viện
+            </a>
+        </div>
+
+        <div class="col-lg-5 h-100">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white d-flex flex-column">
+                
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-shrink-0">
+                    <h5 class="fw-bold m-0 text-dark">Chép chính tả</h5>
+                    <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-3">B1</span>
+                </div>
+
+                <div class="px-3 py-2 border-bottom bg-light bg-opacity-25 d-flex justify-content-between flex-shrink-0">
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-light border text-secondary" onclick="prevSegment()"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-sm btn-light border text-secondary" onclick="replaySegment()"><i class="fas fa-redo"></i></button>
+                        <button class="btn btn-sm btn-light border text-secondary" onclick="nextSegment()"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-light border text-secondary" onclick="changeSpeed()"><span id="speedLabel" class="fw-bold">1x</span></button>
+                    </div>
+                </div>
+
+                <div class="card-body p-3 d-flex flex-column overflow-auto">
+                    <p class="text-muted small mb-2">Gõ những gì bạn nghe được:</p>
+                    
+                    <div class="position-relative mb-3 flex-shrink-0">
+                        <textarea id="mainInput" class="form-control bg-light border-0 rounded-3 p-3 fs-5 shadow-inner" 
+                                  rows="3" placeholder="Gõ câu trả lời của bạn ở đây..." 
+                                  style="resize: none;"></textarea>
+                        <button class="btn btn-light rounded-circle position-absolute bottom-0 end-0 m-2 shadow-sm border btn-sm" onclick="startDictation()">
+                            <i class="fas fa-microphone text-dark"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex-grow-1 overflow-auto border rounded-3 p-2 bg-white mb-3" style="min-height: 100px;">
+                        <div id="wordMasksContainer" class="d-flex flex-wrap gap-2 justify-content-center align-content-start">
+                            </div>
+                    </div>
+
+                    <div class="mt-auto flex-shrink-0">
+                        <p class="text-secondary small text-center mb-2" style="font-size: 0.8rem;">
+                            Các từ được tiết lộ sẽ bị tính là lỗi.
+                        </p>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-danger fw-bold py-2 shadow-sm" onclick="revealAll()">
+                                Hiện tất cả từ
+                            </button>
+                            <button id="btnNext" class="btn btn-primary fw-bold py-2 shadow-sm disabled" onclick="nextSegment()">
+                                Tiếp theo <i class="fas fa-chevron-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 h-100">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white d-flex flex-column">
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-shrink-0">
+                    <h6 class="fw-bold m-0">Bản chép</h6>
+                    <span class="text-primary fw-bold small" id="progressPercent">0%</span>
+                </div>
+                
+                <div class="card-body p-0 overflow-auto flex-grow-1 custom-scrollbar" id="transcriptList">
+                    {% for segment in video.segments %}
+                    <div class="transcript-item p-3 border-bottom cursor-pointer transition-bg" 
+                         id="trans-item-{{ loop.index0 }}" 
+                         onclick="jumpToSegment({{ loop.index0 }})">
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="badge bg-light text-secondary border">#{{ loop.index }}</span>
+                            <div class="text-muted small op-50">
+                                <i class="far fa-edit me-2"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-masked font-monospace small text-secondary" id="mask-{{ loop.index0 }}">
+                            </div>
+                        
+                        <div class="text-real d-none small fw-bold text-dark" id="real-{{ loop.index0 }}">
+                            {{ segment.text }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="card-footer bg-light border-top py-3 flex-shrink-0">
+                    <div class="row text-center small fw-bold">
+                        <div class="col-4 border-end">
+                            <div class="text-warning" id="statRemaining">0</div>
+                            <div class="text-muted smaller">Còn lại</div>
+                        </div>
+                        <div class="col-4 border-end">
+                            <div class="text-success" id="statCompleted">0</div>
+                            <div class="text-muted smaller">Xong</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-primary" id="statTotal">{{ video.segments|length }}</div>
+                            <div class="text-muted smaller">Tổng</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    var player;
+    var segments = {{ video.segments | tojson }};
+    var currentIdx = 0;
+    var isPlaying = false;
+    var playbackRate = 1;
+    var completedCount = 0;
+
+    // 1. YouTube API
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-player', {
+            videoId: '{{ video.id }}',
+            playerVars: { 'playsinline': 1, 'controls': 0, 'rel': 0, 'fs': 0 },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        initTranscriptList();
+        loadSegmentUI(0);
+        updateStats();
+        setInterval(updateTimer, 500);
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+            isPlaying = true;
+            document.getElementById('btnPlay').innerHTML = '<i class="fas fa-pause me-1"></i> Tạm dừng';
+            monitorSegmentEnd();
+        } else {
+            isPlaying = false;
+            document.getElementById('btnPlay').innerHTML = '<i class="fas fa-play me-1"></i> Tiếp tục';
+        }
+    }
+
+    // 2. Logic Giao diện
+    function initTranscriptList() {
+        segments.forEach((seg, idx) => {
+            const maskEl = document.getElementById('mask-' + idx);
+            const maskedText = seg.text.replace(/[a-zA-Z0-9]/g, '*');
+            maskEl.innerText = maskedText;
+        });
+    }
+
+    function loadSegmentUI(idx) {
+        currentIdx = idx;
+        const seg = segments[idx];
+
+        // Reset Input
+        const input = document.getElementById('mainInput');
+        input.value = '';
+        input.className = 'form-control bg-light border-0 rounded-3 p-3 fs-5';
+        input.focus();
+
+        // Tạo các ô từ gợi ý
+        const container = document.getElementById('wordMasksContainer');
+        container.innerHTML = '';
+        
+        const words = seg.text.split(' ');
+        words.forEach((word, wordIdx) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'd-flex flex-column align-items-center';
+            
+            const btnEye = document.createElement('button');
+            btnEye.className = 'btn btn-sm btn-link text-secondary p-0 mb-1';
+            btnEye.innerHTML = '<i class="far fa-eye"></i>';
+            btnEye.onclick = () => revealWord(wordIdx, word);
+
+            const maskBox = document.createElement('div');
+            maskBox.className = 'bg-light border rounded px-2 py-1 font-monospace small text-muted';
+            maskBox.id = `word-mask-${wordIdx}`;
+            maskBox.innerText = '*'.repeat(word.replace(/[^a-zA-Z0-9]/g, '').length);
+
+            wrapper.appendChild(btnEye);
+            wrapper.appendChild(maskBox);
+            container.appendChild(wrapper);
+        });
+
+        // Highlight cột phải
+        document.querySelectorAll('.transcript-item').forEach(el => 
+            el.classList.remove('bg-primary', 'bg-opacity-10', 'border-start', 'border-4', 'border-primary'));
+        
+        const activeItem = document.getElementById('trans-item-' + idx);
+        if(activeItem) {
+            activeItem.classList.add('bg-primary', 'bg-opacity-10', 'border-start', 'border-4', 'border-primary');
+            // Cuộn đến phần tử đang chọn
+            activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        document.getElementById('btnNext').classList.add('disabled');
+    }
+
+    // 3. Logic Nhập liệu & Kiểm tra
+    document.getElementById('mainInput').addEventListener('input', function() {
+        const userVal = this.value.trim();
+        const correctVal = segments[currentIdx].text;
+        const cleanUser = userVal.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g, ' ');
+        const cleanCorrect = correctVal.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g, ' ');
+
+        if (cleanUser === cleanCorrect) {
+            this.classList.add('is-valid', 'text-success', 'fw-bold');
+            this.classList.remove('bg-light');
+            document.getElementById('btnNext').classList.remove('disabled');
+            
+            const maskEl = document.getElementById('mask-' + currentIdx);
+            if (!maskEl.classList.contains('d-none')) {
+                completedCount++;
+                updateStats();
+            }
+            maskEl.classList.add('d-none');
+            document.getElementById('real-' + currentIdx).classList.remove('d-none');
+        }
+    });
+
+    function revealAll() {
+        const seg = segments[currentIdx];
+        document.getElementById('mainInput').value = seg.text;
+        document.getElementById('mainInput').classList.add('text-danger');
+        document.getElementById('btnNext').classList.remove('disabled');
+        
+        const maskEl = document.getElementById('mask-' + currentIdx);
+        if (!maskEl.classList.contains('d-none')) {
+            completedCount++;
+            updateStats();
+        }
+        maskEl.classList.add('d-none');
+        document.getElementById('real-' + currentIdx).classList.remove('d-none');
+    }
+
+    function revealWord(wordIdx, wordText) {
+        const maskBox = document.getElementById(`word-mask-${wordIdx}`);
+        maskBox.innerText = wordText;
+        maskBox.classList.add('text-danger', 'fw-bold');
+    }
+
+    // 4. Điều khiển Video
+    function togglePlay() {
+        if(isPlaying) player.pauseVideo();
+        else {
+            const seg = segments[currentIdx];
+            if (player.getCurrentTime() < seg.start || player.getCurrentTime() > seg.end) {
+                player.seekTo(seg.start);
+            }
+            player.playVideo();
+        }
+    }
+
+    function replaySegment() {
+        player.seekTo(segments[currentIdx].start);
+        player.playVideo();
+    }
+
+    function monitorSegmentEnd() {
+        if(!isPlaying) return;
+        const seg = segments[currentIdx];
+        if (player.getCurrentTime() >= seg.end) {
+            player.pauseVideo();
+        } else {
+            requestAnimationFrame(monitorSegmentEnd);
+        }
+    }
+
+    function nextSegment() {
+        if (currentIdx < segments.length - 1) {
+            loadSegmentUI(currentIdx + 1);
+            replaySegment();
+        } else {
+            alert("Chúc mừng! Bạn đã hoàn thành bài học.");
+            window.location.href = "/topics";
+        }
+    }
+
+    function prevSegment() {
+        if (currentIdx > 0) {
+            loadSegmentUI(currentIdx - 1);
+            replaySegment();
+        }
+    }
+    
+    function jumpToSegment(idx) {
+        loadSegmentUI(idx);
+        replaySegment();
+    }
+    
+    function changeSpeed() {
+        const rates = [0.75, 1.0, 1.25];
+        let nextIdx = rates.indexOf(playbackRate) + 1;
+        if(nextIdx >= rates.length) nextIdx = 0;
+        playbackRate = rates[nextIdx];
+        player.setPlaybackRate(playbackRate);
+        document.getElementById('speedLabel').innerText = playbackRate + 'x';
+    }
+
+    function updateTimer() {
+        if(player && player.getCurrentTime) {
+            const t = Math.floor(player.getCurrentTime());
+            const m = Math.floor(t / 60);
+            const s = t % 60;
+            document.getElementById('timeDisplay').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+    }
+
+    function updateStats() {
+        const total = segments.length;
+        const percent = Math.round((completedCount / total) * 100);
+        document.getElementById('progressPercent').innerText = percent + '%';
+        document.getElementById('statTotal').innerText = total;
+        document.getElementById('statCompleted').innerText = completedCount;
+        document.getElementById('statRemaining').innerText = total - completedCount;
+    }
+
+    // Load Youtube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+</script>
+
+<style>
+    /* Custom Colors */
+    .btn-dark-blue { background-color: #2c3e50; color: white; border: none; }
+    .btn-dark-blue:hover { background-color: #1a252f; color: white; }
+    
+    .btn-info-light { background-color: #3498db; color: white; border: none; }
+    .btn-info-light:hover { background-color: #2980b9; color: white; }
+
+    /* Transitions */
+    .transition-bg { transition: background-color 0.2s; border-left: 4px solid transparent; }
+    
+    /* Layout fixes */
+    .cursor-pointer { cursor: pointer; }
+    .op-50 { opacity: 0.5; }
+    
+    /* Input Styling */
+    #mainInput:focus { box-shadow: none; border: 1px solid #3498db !important; background-color: #fff !important; }
+    .shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
+
+    /* Custom Scrollbar cho đẹp hơn trong khung nhỏ */
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #bbb; }
+</style>
+
+{% endblock %}

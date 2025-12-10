@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Movies & Trailers",
+    "icon": "fa-film",
+    "videos": [
+      {
+        "id": "t6-fT0hjTvc",
+        "title": "Kiki's Delivery Service - Trailer",
+        "desc": "Luyện nghe tiếng Anh qua trailer phim hoạt hình Ghibli.",
+        "thumbnail": "https://img.youtube.com/vi/t6-fT0hjTvc/maxresdefault.jpg",
+        "duration": "00:47",
+        "level": "Trung bình",
+        "segments": [
+          { "start": 2.0, "end": 8.0, "text": "If things don't work out you can always come home and come back a failure" },
+          { "start": 9.0, "end": 13.0, "text": "Wow look at this city I'm Kiki and I'm a witch" },
+          { "start": 13.0, "end": 16.0, "text": "Do you think you can deliver this by tonight?" },
+          { "start": 16.0, "end": 19.0, "text": "Cool witch!" },
+          { "start": 20.0, "end": 22.0, "text": "What's wrong with me?" },
+          { "start": 22.0, "end": 26.0, "text": "I meet a lot of people and at first everything seems to be going okay" },
+          { "start": 26.0, "end": 30.0, "text": "But then I start feeling like such an outsider" },
+          { "start": 32.0, "end": 36.0, "text": "It's a major insult we fly with our spirit" },
+          { "start": 36.0, "end": 44.0, "text": "That same spirit is what makes me paint and makes your friend bake but we each need to find our own inspiration Kiki" }
+        ]
+      },
+      {
+        "id": "dbtN9HOOqhk",
+        "title": "YOUR NAME English Trailer (2016) Anime Movie",
+        "desc": "Luyện nghe qua trailer anime nổi tiếng Your Name.",
+        "thumbnail": "https://img.youtube.com/vi/dbtN9HOOqhk/maxresdefault.jpg",
+        "duration": "01:47",
+        "level": "Dễ",
+        "segments": [
+          { "start": 1.0, "end": 2.0, "text": "The day," },
+          { "start": 2.0, "end": 4.0, "text": "a star fell." },
+          { "start": 4.0, "end": 5.0, "text": "It was almost like," },
+          { "start": 5.0, "end": 7.0, "text": "like seeing something out of a dream." },
+          { "start": 7.0, "end": 9.0, "text": "Nothing more or less," },
+          { "start": 9.0, "end": 14.0, "text": "than a breathtaking view." },
+          { "start": 26.0, "end": 29.0, "text": "Wanna hit the café later?" },
+          { "start": 29.0, "end": 32.0, "text": "Thanks, but i got to go to work." },
+          { "start": 32.0, "end": 34.0, "text": "I can't stand this place anymore." },
+          { "start": 34.0, "end": 37.0, "text": "It`s too small and townie." },
+          { "start": 37.0, "end": 42.0, "text": "Please make me a handsome Tokyo boy in my next life!" },
+          { "start": 44.0, "end": 45.0, "text": "Where...?" },
+          { "start": 45.0, "end": 50.0, "text": "Now that you`ve mentioned, I do feel like I've been having weird dreams lately." },
+          { "start": 50.0, "end": 53.0, "text": "I could dream about someone else's life?" },
+          { "start": 53.0, "end": 56.0, "text": "What is this?" },
+          { "start": 56.0, "end": 58.0, "text": "This is..." },
+          { "start": 58.0, "end": 60.0, "text": "Could this mean..." },
+          { "start": 60.0, "end": 62.0, "text": "In our dreams that girl and I..." },
+          { "start": 62.0, "end": 67.0, "text": "...We're switching places?!" },
+          { "start": 69.0, "end": 72.0, "text": "There's one thing I'm certain of..." },
+          { "start": 72.0, "end": 76.0, "text": "If we see each other, we'll definitely know right away." },
+          { "start": 76.0, "end": 80.0, "text": "I was planning to tell you, that wherever you are in the world," },
+          { "start": 80.0, "end": 83.0, "text": "I swear that I'll find you again no matter what." },
+          { "start": 83.0, "end": 84.0, "text": "Who are you?" },
+          { "start": 84.0, "end": 85.0, "text": "Who are you?" },
+          { "start": 85.0, "end": 87.0, "text": "Could I ask you..." },
+          { "start": 87.0, "end": 90.0, "text": "...Your Name?" }
+        ]
+      }
+    ]
+  }
+]

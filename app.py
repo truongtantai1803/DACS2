@@ -62,21 +62,22 @@ class FlashcardReview(db.Model):
     next_review = db.Column(db.DateTime, nullable=False) # Thời gian ôn tập tiếp theo
 
 # --- HÀM LOAD DỮ LIỆU TỪ JSON ---
-def load_flashcards():
-    # Đường dẫn tới file json: thư mục hiện tại / data / vocabulary.json
-    file_path = os.path.join(app.root_path, 'data', 'vocabulary.json')
+def load_json_data(filename):
+    # Đường dẫn tới file json trong thư mục data
+    file_path = os.path.join(app.root_path, 'data', filename)
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        print("Lỗi: Không tìm thấy file vocabulary.json trong thư mục data.")
+        print(f"Lỗi: Không tìm thấy file {filename} trong thư mục data.")
         return []
     except json.JSONDecodeError:
-        print("Lỗi: File vocabulary.json bị lỗi cú pháp.")
+        print(f"Lỗi: File {filename} bị lỗi cú pháp.")
         return []
 
 # Biến toàn cục chứa danh sách từ vựng (được load khi khởi động)
-FLASHCARDS_DB = load_flashcards()
+FLASHCARDS_DB = load_json_data('vocabulary.json')
+VIDEOS_DB = load_json_data('videos.json')
 
 # --- ROUTES ---
 
@@ -141,25 +142,20 @@ def home():
 @app.route('/topics')
 def topics():
     if 'user' not in session: return redirect(url_for('login'))
-    # Dữ liệu giả lập cho trang Chủ đề
-    categories = [
-        {
-            'name': 'Daily English Conversation',
-            'icon': 'fa-comments',
-            'videos': [
-                {'title': '100 Common English Phrases', 'desc': 'Các mẫu câu giao tiếp thông dụng nhất.', 'thumbnail': 'https://img.youtube.com/vi/aFnU_H13J8s/maxresdefault.jpg', 'duration': '15:30', 'level': 'Dễ'}
-            ]
-        }
-    ]
-    return render_template('topics.html', page_name='topics', categories=categories)
+    
+    # [CẬP NHẬT] Load dữ liệu Video từ JSON
+    global VIDEOS_DB
+    VIDEOS_DB = load_json_data('videos.json')
+    
+    return render_template('topics.html', page_name='topics', categories=VIDEOS_DB)
 
 @app.route('/vocabulary')
 def vocabulary():
     if 'user' not in session: return redirect(url_for('login'))
     
-    # Reload lại dữ liệu từ file JSON mỗi lần vào trang (để cập nhật nếu bạn sửa file json)
+    # Reload lại dữ liệu từ file JSON mỗi lần vào trang
     global FLASHCARDS_DB
-    FLASHCARDS_DB = load_flashcards()
+    FLASHCARDS_DB = load_json_data('vocabulary.json')
     
     vocab_sections = [
         {
@@ -190,7 +186,7 @@ def study(set_id):
 
     # Reload data
     global FLASHCARDS_DB
-    FLASHCARDS_DB = load_flashcards()
+    FLASHCARDS_DB = load_json_data('vocabulary.json')
 
     # Kiểm tra index hợp lệ
     if start_index >= len(FLASHCARDS_DB):
@@ -288,7 +284,7 @@ def review():
     
     # Reload data
     global FLASHCARDS_DB
-    FLASHCARDS_DB = load_flashcards()
+    FLASHCARDS_DB = load_json_data('vocabulary.json')
     
     review_cards = []
     now = datetime.now()
@@ -303,6 +299,35 @@ def review():
             review_cards.append(card)
     
     return render_template('review.html', page_name='review', cards=review_cards)
+
+# [QUAN TRỌNG] Dictation: Đọc từ file JSON
+@app.route('/dictation/<video_id>')
+def dictation(video_id):
+    if 'user' not in session: return redirect(url_for('login'))
+    
+    # Reload data
+    global VIDEOS_DB
+    VIDEOS_DB = load_json_data('videos.json')
+    
+    # Tìm video trong danh sách
+    video_data = None
+    for category in VIDEOS_DB:
+        for video in category['videos']:
+            if video['id'] == video_id:
+                video_data = video
+                break
+        if video_data: break
+    
+    # Nếu không tìm thấy, trả về video mặc định hoặc báo lỗi
+    if not video_data:
+        # Fallback (Phòng trường hợp file JSON lỗi hoặc video cũ)
+        video_data = {
+            'id': video_id,
+            'title': 'Video Not Found',
+            'segments': []
+        }
+    
+    return render_template('dictation.html', video=video_data)
 
 # CÁC ROUTE KHÁC (COMMUNITY, STATS, PROFILE...)
 
@@ -360,16 +385,28 @@ def add_comment(post_id):
 @app.route('/stats')
 def stats():
     if 'user' not in session: return redirect(url_for('login'))
-    # Dữ liệu giả lập cho trang thống kê
+    
+    user = User.query.filter_by(username=session['user']).first()
+    if not user: return redirect(url_for('login'))
+    
+    # Tính toán số liệu thật từ DB
+    total_vocab = len(FLASHCARDS_DB)
+    # Số từ đã học (có trong bảng Review)
+    learned_count = FlashcardReview.query.filter_by(user_id=user.id).count()
+    # Số từ cần ôn tập (Next review <= Now)
+    now = datetime.now()
+    due_count = FlashcardReview.query.filter_by(user_id=user.id).filter(FlashcardReview.next_review <= now).count()
+    
+    # Giả lập các số liệu khác cho đẹp
     stats_data = {
-        'total_cards': len(FLASHCARDS_DB),
-        'reviews': 12,
-        'due': 5,
+        'total_cards': total_vocab,
+        'reviews': learned_count * 2,
+        'due': due_count,
         'accuracy': 85,
-        'learning': 10,
+        'learning': due_count,
         'reviewing': 5,
-        'mastered': 20,
-        'total_vocab': len(FLASHCARDS_DB)
+        'mastered': max(0, learned_count - due_count), # Đã học trừ đi số cần ôn
+        'total_vocab': total_vocab
     }
     return render_template('stats.html', page_name='stats', stats=stats_data)
 
@@ -381,13 +418,41 @@ def profile():
 @app.route('/leaderboard')
 def leaderboard():
     if 'user' not in session: return redirect(url_for('login'))
-    leaderboard_data = [
-        {'rank': 1, 'username': 'Sarah_Polyglot', 'xp': 2850, 'avatar_color': 'f44336'},
-        {'rank': 2, 'username': 'Mike_English', 'xp': 2720, 'avatar_color': '2196f3'},
-        {'rank': 3, 'username': 'Jessica_AI', 'xp': 2680, 'avatar_color': '9c27b0'}
-    ]
-    current_user_rank = {'rank': 15, 'username': session['user'], 'xp': 1200, 'avatar_color': '58cc02'}
-    return render_template('leaderboard.html', page_name='leaderboard', leaderboard=leaderboard_data, my_rank=current_user_rank)
+    
+    # 1. Tính điểm XP cho TẤT CẢ User
+    all_users = User.query.all()
+    leaderboard_data = []
+    
+    for u in all_users:
+        # Đếm số thẻ user này đã học (có trong bảng Review)
+        words_learned = FlashcardReview.query.filter_by(user_id=u.id).count()
+        xp = words_learned * 10 
+        
+        # Chọn màu avatar ngẫu nhiên dựa trên ID
+        colors = ['f44336', 'e91e63', '9c27b0', '673ab7', '3f51b5', '2196f3', '03a9f4', '00bcd4', '009688', '4caf50', '8bc34a', 'cddc39', 'ffeb3b', 'ffc107', 'ff9800', 'ff5722']
+        avatar_color = colors[u.id % len(colors)]
+        
+        leaderboard_data.append({
+            'username': u.username,
+            'xp': xp,
+            'avatar_color': avatar_color,
+            'words_learned': words_learned
+        })
+    
+    # 2. Sắp xếp theo XP giảm dần
+    leaderboard_data.sort(key=lambda x: x['xp'], reverse=True)
+    
+    # 3. Gán thứ hạng (Rank)
+    for i, data in enumerate(leaderboard_data):
+        data['rank'] = i + 1
+        
+    # 4. Tìm thứ hạng của User hiện tại
+    current_user_rank = next((item for item in leaderboard_data if item['username'] == session['user']), None)
+    
+    # Chỉ lấy Top 10 để hiển thị
+    top_10 = leaderboard_data[:10]
+    
+    return render_template('leaderboard.html', page_name='leaderboard', leaderboard=top_10, my_rank=current_user_rank)
 
 # --- KHỞI ĐỘNG ---
 if __name__ == '__main__':

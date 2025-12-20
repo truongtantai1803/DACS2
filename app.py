@@ -18,6 +18,8 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)      # Mới: Email
+    fullname = db.Column(db.String(100), nullable=False)                # Mới: Tên hiển thị
     password = db.Column(db.String(60), nullable=False)
     # Quan hệ
     posts = db.relationship('Post', backref='author', lazy=True)
@@ -25,13 +27,21 @@ class User(db.Model):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=True) # Có thể null nếu chỉ chia sẻ mà không viết gì thêm
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # Quan hệ
+    
+    # Mới: Logic Chia sẻ (Self-referencing)
+    # original_post_id trỏ về bài gốc. Nếu bài gốc bị xóa, các bài share cũng bị xóa (cascade)
+    original_post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=True)
+    shares = db.relationship('Post', 
+                             backref=db.backref('original', remote_side=[id]), 
+                             cascade="all, delete-orphan") 
+
+    # Quan hệ khác
     comments = db.relationship('Comment', backref='post', lazy=True, cascade="all, delete-orphan")
     likes = db.relationship('Like', backref='post', lazy=True, cascade="all, delete-orphan")
-    
+
     def is_liked_by(self, user_id):
         return Like.query.filter_by(user_id=user_id, post_id=self.id).first() is not None
 
@@ -95,7 +105,10 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
+        # Tìm user trong DB
         user = User.query.filter_by(username=username).first()
+        
+        # Kiểm tra mật khẩu (đơn giản, chưa mã hóa)
         if user and user.password == password:
             session['user'] = user.username
             return redirect(url_for('home'))
@@ -110,25 +123,26 @@ def register():
     error = None
     if request.method == 'POST':
         username = request.form['username']
+        email = request.form['email']           # Mới
+        fullname = request.form['fullname']     # Mới
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
         if password != confirm_password:
             error = 'Mật khẩu nhập lại không khớp!'
         else:
-            existing_user = User.query.filter_by(username=username).first()
-            if existing_user:
-                error = 'Tên tài khoản đã tồn tại!'
+            # Kiểm tra trùng username hoặc email
+            user_exists = User.query.filter((User.username==username) | (User.email==email)).first()
+            if user_exists:
+                error = 'Tên tài khoản hoặc Email đã tồn tại!'
             else:
-                new_user = User(username=username, password=password)
+                new_user = User(username=username, email=email, fullname=fullname, password=password)
                 db.session.add(new_user)
                 db.session.commit()
-                # Đăng ký thành công -> Tự động đăng nhập
                 session['user'] = username
                 return redirect(url_for('home'))
 
     return render_template('register.html', error=error)
-
 @app.route('/logout')
 def logout():
     session.pop('user', None)
@@ -411,9 +425,53 @@ def stats():
     return render_template('stats.html', page_name='stats', stats=stats_data)
 
 @app.route('/profile')
-def profile():
+@app.route('/profile/<username>')
+def profile(username=None):
     if 'user' not in session: return redirect(url_for('login'))
-    return render_template('profile.html', page_name='profile')
+    
+    # Nếu không truyền username, mặc định là user đang đăng nhập
+    target_username = username if username else session['user']
+    target_user = User.query.filter_by(username=target_username).first_or_404()
+    
+    # Lấy danh sách bài viết của người này (sắp xếp mới nhất)
+    user_posts = Post.query.filter_by(user_id=target_user.id).order_by(Post.date_posted.desc()).all()
+    
+    return render_template('profile.html', page_name='profile', user=target_user, posts=user_posts)
+
+# Route Xóa bài viết
+@app.route('/delete_post/<int:post_id>')
+def delete_post(post_id):
+    if 'user' not in session: return redirect(url_for('login'))
+    
+    post = Post.query.get_or_404(post_id)
+    current_user = User.query.filter_by(username=session['user']).first()
+    
+    # Chỉ chủ bài viết mới được xóa
+    if post.author.id == current_user.id:
+        db.session.delete(post) # Cascade sẽ tự động xóa các bài share liên quan
+        db.session.commit()
+    
+    # Quay lại trang trước đó (Community hoặc Profile)
+    return redirect(request.referrer or url_for('community'))
+
+# Route Chia sẻ bài viết
+@app.route('/share_post/<int:original_id>')
+def share_post(original_id):
+    if 'user' not in session: return redirect(url_for('login'))
+    
+    current_user = User.query.filter_by(username=session['user']).first()
+    original_post = Post.query.get_or_404(original_id)
+    
+    # Nếu bài này vốn là bài share, ta share bài gốc của nó (tránh share chồng share)
+    real_original_id = original_post.original_post_id if original_post.original_post_id else original_post.id
+    
+    # Tạo bài viết mới trỏ về bài gốc
+    new_share = Post(content="", user_id=current_user.id, original_post_id=real_original_id)
+    
+    db.session.add(new_share)
+    db.session.commit()
+    
+    return redirect(url_for('profile')) # Share xong chuyển về trang cá nhân để thấy bài
 
 @app.route('/leaderboard')
 def leaderboard():

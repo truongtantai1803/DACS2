@@ -5,17 +5,19 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         
-        <!-- Cột chính: News Feed -->
         <div class="col-md-8 col-lg-6">
 
-            <!-- 1. KHUNG TẠO BÀI VIẾT MỚI -->
             <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="https://ui-avatars.com/api/?name={{ session.get('user', 'User') }}&background=58cc02&color=fff"
+                        <img src="https://ui-avatars.com/api/?name={{ current_user.fullname }}&background=58cc02&color=fff"
                              class="rounded-circle me-3 border border-2 border-white shadow-sm" width="48" height="48">
                         <div>
-                            <h5 class="fw-bold mb-0 text-dark">Tạo bài viết mới</h5>
+                            <h5 class="fw-bold mb-0 text-dark">
+                                <a href="/profile/{{ current_user.username }}" class="text-decoration-none text-dark">
+                                    {{ current_user.fullname }}
+                                </a>
+                            </h5>
                             <small class="text-muted">Chia sẻ kiến thức cùng cộng đồng</small>
                         </div>
                     </div>
@@ -41,72 +43,97 @@
                 </div>
             </div>
 
-            <!-- 2. DANH SÁCH BÀI VIẾT -->
             {% for post in posts %}
             <div class="card border-0 shadow-sm rounded-4 mb-4 post-card animate-fade-in">
                 <div class="card-body p-4">
 
-                    <!-- Header bài viết -->
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <div class="d-flex align-items-center">
-                            <img src="https://ui-avatars.com/api/?name={{ post.author.username }}&background={{ (loop.index * 123) % 360 }}&color=fff"
+                            <img src="https://ui-avatars.com/api/?name={{ post.author.fullname }}&background={{ (loop.index * 123) % 360 }}&color=fff"
                                  class="rounded-circle me-3 border border-1 border-light shadow-sm" width="45" height="45">
                             <div>
-                                <h6 class="fw-bold text-dark mb-0">{{ post.author.username }}</h6>
+                                <h6 class="fw-bold text-dark mb-0">
+                                    <a href="/profile/{{ post.author.username }}" class="text-decoration-none text-dark">{{ post.author.fullname }}</a>
+                                    {% if post.original %}
+                                        <span class="fw-normal text-muted small"> <i class="fas fa-share"></i> đã chia sẻ</span>
+                                    {% endif %}
+                                </h6>
                                 <small class="text-muted" style="font-size: 0.75rem;">
                                     <i class="far fa-clock me-1"></i> {{ post.date_posted.strftime('%H:%M - %d/%m') }}
                                 </small>
                             </div>
                         </div>
-                        <!-- Nút menu (giả lập) -->
-                        <button class="btn btn-link text-muted p-0 text-decoration-none"><i class="fas fa-ellipsis-h"></i></button>
+                        
+                        {% if post.author.username == session['user'] %}
+                        <div class="dropdown">
+                            <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                <li><a class="dropdown-item text-danger" href="/delete_post/{{ post.id }}">
+                                    <i class="fas fa-trash me-2"></i>Xóa bài viết
+                                </a></li>
+                            </ul>
+                        </div>
+                        {% endif %}
                     </div>
 
-                    <!-- Nội dung -->
+                    {% if post.content %}
                     <p class="card-text text-dark mb-3" style="font-size: 1.05rem; line-height: 1.6;">
                         {{ post.content }}
                     </p>
+                    {% endif %}
 
-                    <!-- Divider -->
+                    {% if post.original %}
+                    <div class="card bg-light border-0 rounded-3 mb-3 p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="fw-bold">{{ post.original.author.fullname }}</div>
+                            <small class="text-muted ms-2">• {{ post.original.date_posted.strftime('%d/%m') }}</small>
+                        </div>
+                        <div>{{ post.original.content }}</div>
+                    </div>
+                    {% endif %}
+
                     <hr class="text-muted opacity-10 my-3">
 
-                    <!-- Hành động (Like & Comment Buttons) -->
-                    <div class="d-flex gap-3">
-                        <!-- Nút Like -->
-                        <a href="/like/{{ post.id }}" class="btn btn-light rounded-pill px-3 py-2 d-flex align-items-center flex-grow-1 justify-content-center action-btn {% if post.is_liked_by(current_user.id) %}active-like{% endif %}">
+                    <div class="d-flex gap-2">
+                        <a href="/like/{{ post.id }}" class="btn btn-light rounded-pill px-3 flex-grow-1 action-btn {% if post.is_liked_by(current_user.id) %}active-like{% endif %}">
                             <i class="{% if post.is_liked_by(current_user.id) %}fas text-danger heart-beat{% else %}far text-secondary{% endif %} fa-heart fs-5 me-2"></i>
                             <span class="fw-bold {% if post.is_liked_by(current_user.id) %}text-danger{% else %}text-secondary{% endif %}">
                                 {{ post.likes|length }}
                             </span>
                         </a>
 
-                        <!-- Nút Comment (Chỉ hiện số lượng) -->
-                        <button class="btn btn-light rounded-pill px-3 py-2 d-flex align-items-center flex-grow-1 justify-content-center action-btn">
+                        <button class="btn btn-light rounded-pill px-3 flex-grow-1 action-btn">
                             <i class="far fa-comment-dots fs-5 me-2 text-secondary"></i>
                             <span class="fw-bold text-secondary">{{ post.comments|length }}</span>
                         </button>
+
+                        {% if not post.original and post.author.username != session['user'] %}
+                        <a href="/share_post/{{ post.id }}" class="btn btn-light rounded-pill px-3 flex-grow-1 action-btn" onclick="return confirm('Bạn có muốn chia sẻ bài viết này về trang cá nhân?');">
+                            <i class="fas fa-share text-secondary"></i>
+                            <span class="ms-1 fw-bold text-secondary">Chia sẻ</span>
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
 
-                <!-- KHUNG BÌNH LUẬN -->
                 <div class="bg-light bg-opacity-50 p-3 rounded-bottom-4 border-top border-light">
                     
-                    <!-- Danh sách comments -->
                     <div class="comments-list mb-3 px-2">
                         {% for comment in post.comments %}
                         <div class="d-flex mb-2 align-items-start">
-                            <img src="https://ui-avatars.com/api/?name={{ comment.author.username }}&background={{ (loop.index * 53) % 360 }}&size=28&color=fff"
+                            <img src="https://ui-avatars.com/api/?name={{ comment.author.fullname }}&background={{ (loop.index * 53) % 360 }}&size=28&color=fff"
                                  class="rounded-circle me-2 mt-1 shadow-sm" width="28" height="28">
                             
                             <div class="bg-white p-2 px-3 rounded-3 shadow-sm d-inline-block" style="border-top-left-radius: 0 !important; max-width: 85%;">
-                                <div class="fw-bold text-dark small mb-0">{{ comment.author.username }}</div>
+                                <div class="fw-bold text-dark small mb-0">{{ comment.author.fullname }}</div>
                                 <span class="text-secondary small">{{ comment.content }}</span>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <!-- Ô nhập comment -->
                     <form action="/comment/{{ post.id }}" method="POST" class="position-relative">
                         <input type="text" name="content" class="form-control rounded-pill ps-3 pe-5 py-2 border-0 shadow-sm"
                                placeholder="Viết bình luận..." required>
@@ -122,7 +149,6 @@
     </div>
 </div>
 
-<!-- CSS TÙY CHỈNH CHO TRANG COMMUNITY -->
 <style>
     /* Hiệu ứng chung */
     .cursor-pointer { cursor: pointer; }

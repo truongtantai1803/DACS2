@@ -107,13 +107,18 @@
 
             <!-- USER DROPDOWN -->
             <div class="dropdown ms-3">
-                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-secondary" data-bs-toggle="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-secondary"
+                    data-bs-toggle="dropdown">
 
-                    <img src="https://ui-avatars.com/api/?name={{ session['user'] }}&background=58cc02&color=fff&size=128"
-                        width="36" height="36" class="rounded-circle me-2 profile-img">
+                    <img src="https://ui-avatars.com/api/?name={{ session.get('short_name', 'G') }}&background=58cc02&color=fff"
+                            width="36" height="36" class="rounded-circle me-2 profile-img">
 
-                    <span class="fw-bold d-none d-sm-inline">{{ session['user'] }}</span>
+                    <span class="fw-bold d-none d-sm-inline"
+                            title="{{ session.get('fullname', '') }}">
+                        {{ session.get('short_name', 'You') }}
+                    </span>
                 </a>
+
 
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                     <li>

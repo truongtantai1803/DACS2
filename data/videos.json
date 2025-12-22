@@ -58,6 +58,115 @@
           { "start": 85.0, "end": 87.0, "text": "Could I ask you..." },
           { "start": 87.0, "end": 90.0, "text": "...Your Name?" }
         ]
+      },
+      {
+        "id": "kP9TfCWaQT4",
+        "title": "TOM & JERRY - Official Trailer",
+        "desc": "Cuộc chiến thế kỷ giữa Tom và Jerry tại khách sạn sang trọng nhất New York.",
+        "thumbnail": "https://img.youtube.com/vi/kP9TfCWaQT4/maxresdefault.jpg",
+        "duration": "02:24",
+        "level": "Khó",
+        "segments": [
+          { "start": 3.0, "end": 7.0, "text": "After a lifetime of being the world's most famous enemies" },
+          { "start": 12.0, "end": 15.0, "text": "Tom and Jerry are about to start over" },
+          { "start": 20.0, "end": 22.0, "text": "in the big city" },
+          { "start": 29.0, "end": 35.0, "text": "This hotel has been host to four presidents three popes two kings and we are about to host the wedding of the century" },
+          { "start": 36.0, "end": 38.0, "text": "Do you think you are qualified to take on this position" },
+          { "start": 38.0, "end": 41.0, "text": "I shine under pressure like a diamond Or Rihanna" },
+          { "start": 42.0, "end": 48.0, "text": "One other thing We have a mouse problem With a what now" },
+          { "start": 49.0, "end": 50.0, "text": "I will catch it sir" },
+          { "start": 56.0, "end": 59.0, "text": "Oh wow This is so detailed" },
+          { "start": 59.0, "end": 65.0, "text": "We could hire an exterminator or we can leverage millions of years of predatory evolution" },
+          { "start": 79.0, "end": 83.0, "text": "If a picture of this mouse is tweeted out to InstaBookFace or Ticky Tok we will be ruined" },
+          { "start": 86.0, "end": 88.0, "text": "No sir That is not gonna happen That rodent is toast" },
+          { "start": 103.0, "end": 107.0, "text": "I will not let this hotel be ruined by a cat and a mouse" },
+          { "start": 108.0, "end": 109.0, "text": "He is toying with us" },
+          { "start": 115.0, "end": 117.0, "text": "I think I might have just pulled this off Really" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Daily English Conversation",
+    "icon": "fa-comments",
+    "videos": [
+      {
+        "id": "SSAWEDhszA8",
+        "title": "Talking About Your Job | Intermediate Business English",
+        "desc": "Hội thoại tiếng Anh thương mại về chủ đề công việc và môi trường công sở.",
+        "thumbnail": "https://img.youtube.com/vi/SSAWEDhszA8/maxresdefault.jpg",
+        "duration": "05:12",
+        "level": "Trung bình",
+        "segments": [
+          { "start": 14.0, "end": 17.0, "text": "How is the 9 to 5 treating you" },
+          { "start": 21.0, "end": 23.0, "text": "It has been hectic but good" },
+          { "start": 28.0, "end": 31.0, "text": "How about you How is work at Blue Corp" },
+          { "start": 32.0, "end": 35.0, "text": "Oh you know it is the usual grind" },
+          { "start": 36.0, "end": 41.0, "text": "I work as a project manager there so it is all about keeping the ship afloat" },
+          { "start": 42.0, "end": 44.0, "text": "Lots of deadlines to meet" },
+          { "start": 48.0, "end": 50.0, "text": "That sounds like a tough gig" },
+          { "start": 51.0, "end": 53.0, "text": "How do you handle all the stress" },
+          { "start": 54.0, "end": 58.0, "text": "Well you have gotta roll with the punches Mike" },
+          { "start": 59.0, "end": 61.0, "text": "I am lucky to have a supportive team" },
+          { "start": 62.0, "end": 65.0, "text": "They say Teamwork makes the dream work" },
+          { "start": 108.0, "end": 113.0, "text": "Speaking of your team how are your co workers Any interesting characters" },
+          { "start": 121.0, "end": 125.0, "text": "He is always cracking jokes lightening the mood" },
+          { "start": 137.0, "end": 140.0, "text": "And what about your boss" },
+          { "start": 141.0, "end": 146.0, "text": "My boss Mr Johnson is a bit of a tough nut to crack" },
+          { "start": 151.0, "end": 155.0, "text": "You know what they say When the cat is away the mice will play" },
+          { "start": 203.0, "end": 206.0, "text": "He is pretty laid back which is a nice change of pace" },
+          { "start": 218.0, "end": 220.0, "text": "I am a software engineer" },
+          { "start": 221.0, "end": 224.0, "text": "I spend most of my day coding and debugging" },
+          { "start": 231.0, "end": 234.0, "text": "Software engineer That is some serious brainpower stuff" },
+          { "start": 243.0, "end": 245.0, "text": "It is a passion turned profession" },
+          { "start": 249.0, "end": 253.0, "text": "Speaking of RollTech what is the company culture like there" },
+          { "start": 258.0, "end": 261.0, "text": "We have flexible hours and they encourage creativity" },
+          { "start": 330.0, "end": 339.0, "text": "We are actually revamping our website giving it a fresh look and improved functionality" },
+          { "start": 352.0, "end": 355.0, "text": "But like they say No pain no gain" },
+          { "start": 405.0, "end": 411.0, "text": "I am part of a team developing a new app for streamlining project management" },
+          { "start": 412.0, "end": 413.0, "text": "It is a game changer Emily" }
+        ]
+      },
+      {
+        "id": "89sPhPRGyoM",
+        "title": "A Dolphin Show Debate",
+        "desc": "Cuộc tranh luận thú vị về việc xem biểu diễn cá heo và quyền lợi động vật.",
+        "thumbnail": "https://img.youtube.com/vi/89sPhPRGyoM/hqdefault.jpg",
+        "duration": "01:08",
+        "level": "Trung bình",
+        "segments": [
+          { "start": 6.0, "end": 10.0, "text": "Wow I really enjoyed watching that lovely dolphin show" },
+          { "start": 11.0, "end": 13.0, "text": "Those dolphins did great tricks" },
+          { "start": 14.0, "end": 15.0, "text": "I felt sorry for them" },
+          { "start": 16.0, "end": 18.0, "text": "Why did they have to do those tricks" },
+          { "start": 20.0, "end": 23.0, "text": "It was great fun to watch the dolphin show was it not" },
+          { "start": 26.0, "end": 28.0, "text": "But they do not belong here do they" },
+          { "start": 30.0, "end": 33.0, "text": "Maybe not but without them this park will be boring" },
+          { "start": 34.0, "end": 37.0, "text": "It still does not make it right to make them do tricks" },
+          { "start": 39.0, "end": 44.0, "text": "But we will not be able to watch them closely or touch them on the nose if we send them back into the wild" },
+          { "start": 47.0, "end": 50.0, "text": "Do you want people to touch your nose every day" },
+          { "start": 53.0, "end": 56.0, "text": "Do you want to do the same tricks over and over again" },
+          { "start": 59.0, "end": 62.0, "text": "All right you have made your point loud and clear" },
+          { "start": 62.0, "end": 63.0, "text": "We should be kinder to dolphins" },
+          { "start": 64.0, "end": 68.0, "text": "Yes because they are a part of nature just like us" }
+        ]
+      },
+      {
+        "id": "_R7nrvhNmrI",
+        "title": "What day is it today? - Easy Dialogue",
+        "desc": "Hội thoại tiếng Anh cơ bản về các ngày trong tuần và rủ bạn đi chơi.",
+        "thumbnail": "https://img.youtube.com/vi/_R7nrvhNmrI/hqdefault.jpg",
+        "duration": "01:32",
+        "level": "Dễ",
+        "segments": [
+          { "start": 6.0, "end": 10.0, "text": "Can you play baseball this afternoon" },
+          { "start": 11.0, "end": 14.0, "text": "What day is it today" },
+          { "start": 15.0, "end": 18.0, "text": "It is Wednesday" },
+          { "start": 19.0, "end": 21.0, "text": "Sorry I cannot" },
+          { "start": 21.0, "end": 26.0, "text": "I have a piano lesson" },
+          { "start": 27.0, "end": 30.0, "text": "Let us play on Friday" },
+          { "start": 31.0, "end": 33.0, "text": "Sounds good" }
+        ]
       }
     ]
   }

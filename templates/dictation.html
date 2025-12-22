@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Nghe chép chính tả - {{ video.title }}{% endblock %}
+{% block title %}Luyện tập - {{ video.title }}{% endblock %}
 
 {% block content %}
 
@@ -40,8 +40,19 @@
             <div class="card border-0 shadow-sm rounded-4 h-100 bg-white d-flex flex-column">
                 
                 <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-shrink-0">
-                    <h5 class="fw-bold m-0 text-dark">Chép chính tả</h5>
-                    <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-3">B1</span>
+                    <h5 class="fw-bold m-0 text-dark">Luyện tập</h5>
+                    
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="studyMode" id="modeDictation" autocomplete="off" checked onchange="switchMode('dictation')">
+                        <label class="btn btn-outline-primary btn-sm fw-bold" for="modeDictation">
+                            <i class="fas fa-pen-alt me-1"></i> Viết
+                        </label>
+
+                        <input type="radio" class="btn-check" name="studyMode" id="modeShadowing" autocomplete="off" onchange="switchMode('shadowing')">
+                        <label class="btn btn-outline-success btn-sm fw-bold" for="modeShadowing">
+                            <i class="fas fa-microphone-alt me-1"></i> Nói
+                        </label>
+                    </div>
                 </div>
 
                 <div class="px-3 py-2 border-bottom bg-light bg-opacity-25 d-flex justify-content-between flex-shrink-0">
@@ -55,30 +66,57 @@
                     </div>
                 </div>
 
-                <div class="card-body p-3 d-flex flex-column overflow-auto">
-                    <p class="text-muted small mb-2">Gõ những gì bạn nghe được:</p>
+                <div class="card-body p-3 d-flex flex-column overflow-auto position-relative">
                     
-                    <div class="position-relative mb-3 flex-shrink-0">
-                        <textarea id="mainInput" class="form-control bg-light border-0 rounded-3 p-3 fs-5 shadow-inner" 
-                                  rows="3" placeholder="Gõ câu trả lời của bạn ở đây..." 
-                                  style="resize: none;"></textarea>
-                        <button class="btn btn-light rounded-circle position-absolute bottom-0 end-0 m-2 shadow-sm border btn-sm" onclick="startDictation()">
-                            <i class="fas fa-microphone text-dark"></i>
-                        </button>
-                    </div>
+                    <div id="dictationArea">
+                        <p class="text-muted small mb-2">Gõ những gì bạn nghe được:</p>
+                        
+                        <div class="position-relative mb-3 flex-shrink-0">
+                            <textarea id="mainInput" class="form-control bg-light border-0 rounded-3 p-3 fs-5 shadow-inner" 
+                                      rows="3" placeholder="Gõ câu trả lời của bạn ở đây..." 
+                                      style="resize: none;"></textarea>
+                        </div>
 
-                    <div class="flex-grow-1 overflow-auto border rounded-3 p-2 bg-white mb-3" style="min-height: 100px;">
-                        <div id="wordMasksContainer" class="d-flex flex-wrap gap-2 justify-content-center align-content-start">
+                        <div class="flex-grow-1 overflow-auto border rounded-3 p-2 bg-white mb-3" style="min-height: 100px;">
+                            <div id="wordMasksContainer" class="d-flex flex-wrap gap-2 justify-content-center align-content-start">
                             </div>
+                        </div>
                     </div>
 
-                    <div class="mt-auto flex-shrink-0">
-                        <p class="text-secondary small text-center mb-2" style="font-size: 0.8rem;">
-                            Các từ được tiết lộ sẽ bị tính là lỗi.
-                        </p>
+                    <div id="shadowingArea" class="d-none text-center d-flex flex-column justify-content-center h-100">
+                        
+                        <div class="mb-4 px-3">
+                            <h4 class="fw-bold text-dark lh-base" id="shadowTextDisplay">...</h4>
+                            <p class="text-muted fst-italic small mt-2">Nghe và lặp lại theo video</p>
+                        </div>
+
+                        <div class="recording-zone py-3">
+                            <div id="recordingWave" class="d-flex justify-content-center gap-1 mb-3 d-none" style="height: 30px;">
+                                <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                            </div>
+
+                            <button id="btnRecord" class="btn btn-outline-danger rounded-circle p-4 shadow mb-3 hover-scale transition-all" 
+                                    style="width: 80px; height: 80px;" onclick="toggleRecording()">
+                                <i class="fas fa-microphone fs-2"></i>
+                            </button>
+                            
+                            <p id="recordStatus" class="text-muted small fw-bold">Nhấn để ghi âm</p>
+                            
+                            <div class="d-flex justify-content-center">
+                                <audio id="userAudioPlayback" controls class="w-100 d-none mt-2" style="max-width: 300px;"></audio>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto flex-shrink-0 pt-3 border-top">
+                        <div id="dictationFooterInfo">
+                            <p class="text-secondary small text-center mb-2" style="font-size: 0.8rem;">
+                                Các từ được tiết lộ sẽ bị tính là lỗi.
+                            </p>
+                        </div>
                         
                         <div class="d-grid gap-2">
-                            <button class="btn btn-danger fw-bold py-2 shadow-sm" onclick="revealAll()">
+                            <button id="btnReveal" class="btn btn-danger fw-bold py-2 shadow-sm" onclick="revealAll()">
                                 Hiện tất cả từ
                             </button>
                             <button id="btnNext" class="btn btn-primary fw-bold py-2 shadow-sm disabled" onclick="nextSegment()">
@@ -150,6 +188,11 @@
     var isPlaying = false;
     var playbackRate = 1;
     var completedCount = 0;
+    
+    // --- VARIABLES CHO CHẾ ĐỘ MỚI ---
+    var currentMode = 'dictation'; // 'dictation' hoặc 'shadowing'
+    var mediaRecorder;
+    var audioChunks = [];
 
     // 1. YouTube API
     function onYouTubeIframeAPIReady() {
@@ -181,7 +224,7 @@
         }
     }
 
-    // 2. Logic Giao diện
+    // 2. Logic Giao diện (ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ SWITCH MODE)
     function initTranscriptList() {
         segments.forEach((seg, idx) => {
             const maskEl = document.getElementById('mask-' + idx);
@@ -190,20 +233,53 @@
         });
     }
 
+    // HÀM SWITCH MODE
+    function switchMode(mode) {
+        currentMode = mode;
+        const dictArea = document.getElementById('dictationArea');
+        const shadowArea = document.getElementById('shadowingArea');
+        const btnReveal = document.getElementById('btnReveal');
+        const footerInfo = document.getElementById('dictationFooterInfo');
+        const btnNext = document.getElementById('btnNext');
+
+        if (mode === 'shadowing') {
+            dictArea.classList.add('d-none');
+            shadowArea.classList.remove('d-none');
+            footerInfo.classList.add('d-none');
+            btnReveal.classList.add('d-none');
+            
+            // Ở Shadowing mode, cho phép bấm Next luôn
+            btnNext.classList.remove('disabled');
+            
+            // Cập nhật text hiển thị ngay
+            document.getElementById('shadowTextDisplay').innerText = segments[currentIdx].text;
+            
+        } else {
+            dictArea.classList.remove('d-none');
+            shadowArea.classList.add('d-none');
+            footerInfo.classList.remove('d-none');
+            btnReveal.classList.remove('d-none');
+            
+            // Ở Dictation mode, cần check lại xem đã làm xong chưa
+            loadSegmentUI(currentIdx);
+        }
+    }
+
+    // HÀM LOAD UI (ĐÃ SỬA)
     function loadSegmentUI(idx) {
         currentIdx = idx;
         const seg = segments[idx];
 
-        // Reset Input
+        // --- XỬ LÝ PHẦN DICTATION ---
         const input = document.getElementById('mainInput');
         input.value = '';
         input.className = 'form-control bg-light border-0 rounded-3 p-3 fs-5';
-        input.focus();
+        input.classList.remove('text-success', 'is-valid', 'fw-bold');
+        input.classList.remove('text-danger'); // Xóa trạng thái reveal nếu có
 
-        // Tạo các ô từ gợi ý
+        // Tạo Masking UI
         const container = document.getElementById('wordMasksContainer');
         container.innerHTML = '';
-        
         const words = seg.text.split(' ');
         words.forEach((word, wordIdx) => {
             const wrapper = document.createElement('div');
@@ -224,6 +300,16 @@
             container.appendChild(wrapper);
         });
 
+        // --- XỬ LÝ PHẦN SHADOWING ---
+        document.getElementById('shadowTextDisplay').innerText = seg.text;
+        
+        // Reset giao diện ghi âm
+        const audioPlayer = document.getElementById('userAudioPlayback');
+        audioPlayer.classList.add('d-none');
+        audioPlayer.src = "";
+        document.getElementById('recordStatus').innerText = "Nhấn để ghi âm";
+
+        // --- UI CHUNG ---
         // Highlight cột phải
         document.querySelectorAll('.transcript-item').forEach(el => 
             el.classList.remove('bg-primary', 'bg-opacity-10', 'border-start', 'border-4', 'border-primary'));
@@ -231,15 +317,31 @@
         const activeItem = document.getElementById('trans-item-' + idx);
         if(activeItem) {
             activeItem.classList.add('bg-primary', 'bg-opacity-10', 'border-start', 'border-4', 'border-primary');
-            // Cuộn đến phần tử đang chọn
             activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        document.getElementById('btnNext').classList.add('disabled');
+        // Logic nút Next
+        const btnNext = document.getElementById('btnNext');
+        if (currentMode === 'dictation') {
+            // Nếu đã làm đúng câu này trước đó (đã hiện text thật ở cột phải) thì cho qua
+            const realText = document.getElementById('real-' + idx);
+            if (!realText.classList.contains('d-none')) {
+                btnNext.classList.remove('disabled');
+            } else {
+                btnNext.classList.add('disabled');
+            }
+        } else {
+            // Shadowing luôn mở nút Next
+            btnNext.classList.remove('disabled');
+        }
+        
+        input.focus();
     }
 
-    // 3. Logic Nhập liệu & Kiểm tra
+    // 3. Logic Nhập liệu & Kiểm tra (Dictation)
     document.getElementById('mainInput').addEventListener('input', function() {
+        if(currentMode !== 'dictation') return;
+
         const userVal = this.value.trim();
         const correctVal = segments[currentIdx].text;
         const cleanUser = userVal.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g, ' ');
@@ -259,6 +361,56 @@
             document.getElementById('real-' + currentIdx).classList.remove('d-none');
         }
     });
+
+    // 4. Logic Ghi âm (Shadowing)
+    async function toggleRecording() {
+        const btnRecord = document.getElementById('btnRecord');
+        const statusText = document.getElementById('recordStatus');
+        const wave = document.getElementById('recordingWave');
+
+        if (!mediaRecorder || mediaRecorder.state === "inactive") {
+            // START RECORDING
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audioPlayer = document.getElementById('userAudioPlayback');
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.classList.remove('d-none');
+                };
+
+                mediaRecorder.start();
+                
+                // UI Update
+                btnRecord.innerHTML = '<i class="fas fa-stop fs-2"></i>';
+                btnRecord.classList.add('btn-recording');
+                statusText.innerText = "Đang ghi âm...";
+                wave.classList.remove('d-none');
+                document.getElementById('userAudioPlayback').classList.add('d-none');
+
+            } catch (err) {
+                alert("Bạn cần cấp quyền Microphone để dùng tính năng này!");
+                console.error(err);
+            }
+        } else {
+            // STOP RECORDING
+            mediaRecorder.stop();
+            
+            // UI Update
+            btnRecord.innerHTML = '<i class="fas fa-microphone fs-2"></i>';
+            btnRecord.classList.remove('btn-recording');
+            statusText.innerText = "Nghe lại bản thu âm";
+            wave.classList.add('d-none');
+        }
+    }
 
     function revealAll() {
         const seg = segments[currentIdx];
@@ -281,7 +433,7 @@
         maskBox.classList.add('text-danger', 'fw-bold');
     }
 
-    // 4. Điều khiển Video
+    // 5. Điều khiển Video (Giữ nguyên)
     function togglePlay() {
         if(isPlaying) player.pauseVideo();
         else {
@@ -374,6 +526,7 @@
 
     /* Transitions */
     .transition-bg { transition: background-color 0.2s; border-left: 4px solid transparent; }
+    .transition-all { transition: all 0.3s; }
     
     /* Layout fixes */
     .cursor-pointer { cursor: pointer; }
@@ -383,11 +536,44 @@
     #mainInput:focus { box-shadow: none; border: 1px solid #3498db !important; background-color: #fff !important; }
     .shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
 
-    /* Custom Scrollbar cho đẹp hơn trong khung nhỏ */
+    /* Custom Scrollbar */
     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+    /* --- SHADOWING MODE ANIMATION --- */
+    .wave-bar {
+        width: 6px;
+        background-color: #dc3545;
+        animation: wave 1s ease-in-out infinite;
+        border-radius: 4px;
+    }
+    .wave-bar:nth-child(1) { animation-delay: 0.1s; height: 40%; }
+    .wave-bar:nth-child(2) { animation-delay: 0.2s; height: 60%; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; height: 100%; }
+    .wave-bar:nth-child(4) { animation-delay: 0.2s; height: 70%; }
+    .wave-bar:nth-child(5) { animation-delay: 0.1s; height: 50%; }
+
+    @keyframes wave {
+        0%, 100% { transform: scaleY(0.5); }
+        50% { transform: scaleY(1); }
+    }
+
+    .btn-recording {
+        background-color: #dc3545 !important;
+        color: white !important;
+        box-shadow: 0 0 0 5px rgba(220, 53, 69, 0.3) !important;
+        animation: pulse-red 1.5s infinite;
+    }
+
+    @keyframes pulse-red {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+    
+    .hover-scale:hover { transform: scale(1.05); }
 </style>
 
 {% endblock %}

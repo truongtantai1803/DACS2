@@ -189,12 +189,10 @@
     var playbackRate = 1;
     var completedCount = 0;
     
-    // --- VARIABLES CHO CHẾ ĐỘ MỚI ---
-    var currentMode = 'dictation'; // 'dictation' hoặc 'shadowing'
+    var currentMode = 'dictation';
     var mediaRecorder;
     var audioChunks = [];
 
-    // 1. YouTube API
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('youtube-player', {
             videoId: '{{ video.id }}',
@@ -224,7 +222,6 @@
         }
     }
 
-    // 2. Logic Giao diện (ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ SWITCH MODE)
     function initTranscriptList() {
         segments.forEach((seg, idx) => {
             const maskEl = document.getElementById('mask-' + idx);
@@ -233,7 +230,6 @@
         });
     }
 
-    // HÀM SWITCH MODE
     function switchMode(mode) {
         currentMode = mode;
         const dictArea = document.getElementById('dictationArea');
@@ -248,10 +244,8 @@
             footerInfo.classList.add('d-none');
             btnReveal.classList.add('d-none');
             
-            // Ở Shadowing mode, cho phép bấm Next luôn
             btnNext.classList.remove('disabled');
             
-            // Cập nhật text hiển thị ngay
             document.getElementById('shadowTextDisplay').innerText = segments[currentIdx].text;
             
         } else {
@@ -260,24 +254,20 @@
             footerInfo.classList.remove('d-none');
             btnReveal.classList.remove('d-none');
             
-            // Ở Dictation mode, cần check lại xem đã làm xong chưa
             loadSegmentUI(currentIdx);
         }
     }
 
-    // HÀM LOAD UI (ĐÃ SỬA)
     function loadSegmentUI(idx) {
         currentIdx = idx;
         const seg = segments[idx];
 
-        // --- XỬ LÝ PHẦN DICTATION ---
         const input = document.getElementById('mainInput');
         input.value = '';
         input.className = 'form-control bg-light border-0 rounded-3 p-3 fs-5';
         input.classList.remove('text-success', 'is-valid', 'fw-bold');
-        input.classList.remove('text-danger'); // Xóa trạng thái reveal nếu có
+        input.classList.remove('text-danger'); 
 
-        // Tạo Masking UI
         const container = document.getElementById('wordMasksContainer');
         container.innerHTML = '';
         const words = seg.text.split(' ');
@@ -300,17 +290,13 @@
             container.appendChild(wrapper);
         });
 
-        // --- XỬ LÝ PHẦN SHADOWING ---
         document.getElementById('shadowTextDisplay').innerText = seg.text;
         
-        // Reset giao diện ghi âm
         const audioPlayer = document.getElementById('userAudioPlayback');
         audioPlayer.classList.add('d-none');
         audioPlayer.src = "";
         document.getElementById('recordStatus').innerText = "Nhấn để ghi âm";
 
-        // --- UI CHUNG ---
-        // Highlight cột phải
         document.querySelectorAll('.transcript-item').forEach(el => 
             el.classList.remove('bg-primary', 'bg-opacity-10', 'border-start', 'border-4', 'border-primary'));
         
@@ -320,10 +306,8 @@
             activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // Logic nút Next
         const btnNext = document.getElementById('btnNext');
         if (currentMode === 'dictation') {
-            // Nếu đã làm đúng câu này trước đó (đã hiện text thật ở cột phải) thì cho qua
             const realText = document.getElementById('real-' + idx);
             if (!realText.classList.contains('d-none')) {
                 btnNext.classList.remove('disabled');
@@ -331,14 +315,12 @@
                 btnNext.classList.add('disabled');
             }
         } else {
-            // Shadowing luôn mở nút Next
             btnNext.classList.remove('disabled');
         }
         
         input.focus();
     }
 
-    // 3. Logic Nhập liệu & Kiểm tra (Dictation)
     document.getElementById('mainInput').addEventListener('input', function() {
         if(currentMode !== 'dictation') return;
 
@@ -362,14 +344,12 @@
         }
     });
 
-    // 4. Logic Ghi âm (Shadowing)
     async function toggleRecording() {
         const btnRecord = document.getElementById('btnRecord');
         const statusText = document.getElementById('recordStatus');
         const wave = document.getElementById('recordingWave');
 
         if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            // START RECORDING
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
@@ -389,7 +369,6 @@
 
                 mediaRecorder.start();
                 
-                // UI Update
                 btnRecord.innerHTML = '<i class="fas fa-stop fs-2"></i>';
                 btnRecord.classList.add('btn-recording');
                 statusText.innerText = "Đang ghi âm...";
@@ -401,10 +380,8 @@
                 console.error(err);
             }
         } else {
-            // STOP RECORDING
             mediaRecorder.stop();
             
-            // UI Update
             btnRecord.innerHTML = '<i class="fas fa-microphone fs-2"></i>';
             btnRecord.classList.remove('btn-recording');
             statusText.innerText = "Nghe lại bản thu âm";
@@ -433,7 +410,6 @@
         maskBox.classList.add('text-danger', 'fw-bold');
     }
 
-    // 5. Điều khiển Video (Giữ nguyên)
     function togglePlay() {
         if(isPlaying) player.pauseVideo();
         else {
@@ -515,65 +491,5 @@
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 </script>
-
-<style>
-    /* Custom Colors */
-    .btn-dark-blue { background-color: #2c3e50; color: white; border: none; }
-    .btn-dark-blue:hover { background-color: #1a252f; color: white; }
-    
-    .btn-info-light { background-color: #3498db; color: white; border: none; }
-    .btn-info-light:hover { background-color: #2980b9; color: white; }
-
-    /* Transitions */
-    .transition-bg { transition: background-color 0.2s; border-left: 4px solid transparent; }
-    .transition-all { transition: all 0.3s; }
-    
-    /* Layout fixes */
-    .cursor-pointer { cursor: pointer; }
-    .op-50 { opacity: 0.5; }
-    
-    /* Input Styling */
-    #mainInput:focus { box-shadow: none; border: 1px solid #3498db !important; background-color: #fff !important; }
-    .shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
-
-    /* Custom Scrollbar */
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #bbb; }
-
-    /* --- SHADOWING MODE ANIMATION --- */
-    .wave-bar {
-        width: 6px;
-        background-color: #dc3545;
-        animation: wave 1s ease-in-out infinite;
-        border-radius: 4px;
-    }
-    .wave-bar:nth-child(1) { animation-delay: 0.1s; height: 40%; }
-    .wave-bar:nth-child(2) { animation-delay: 0.2s; height: 60%; }
-    .wave-bar:nth-child(3) { animation-delay: 0.3s; height: 100%; }
-    .wave-bar:nth-child(4) { animation-delay: 0.2s; height: 70%; }
-    .wave-bar:nth-child(5) { animation-delay: 0.1s; height: 50%; }
-
-    @keyframes wave {
-        0%, 100% { transform: scaleY(0.5); }
-        50% { transform: scaleY(1); }
-    }
-
-    .btn-recording {
-        background-color: #dc3545 !important;
-        color: white !important;
-        box-shadow: 0 0 0 5px rgba(220, 53, 69, 0.3) !important;
-        animation: pulse-red 1.5s infinite;
-    }
-
-    @keyframes pulse-red {
-        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-        70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-    }
-    
-    .hover-scale:hover { transform: scale(1.05); }
-</style>
 
 {% endblock %}

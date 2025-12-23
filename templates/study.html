@@ -221,45 +221,4 @@
     loadCard(currentIdx);
 </script>
 
-<style>
-    /* 3D Flip Effect */
-    .flashcard-container { perspective: 1000px; cursor: pointer; height: 500px; }
-    .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; }
-    .flashcard.flipped { transform: rotateY(180deg); }
-    .flashcard .front, .flashcard .back { 
-        position: absolute; width: 100%; height: 100%; 
-        backface-visibility: hidden; top: 0; left: 0; 
-        background-color: #ffffff; /* Thay đổi màu nền thành trắng */
-        /* Giữ lại style cho border để phân biệt với nền trang */
-    }
-    .flashcard .back { transform: rotateY(180deg); }
-
-    /* Button Hover Effects */
-    .transition-hover:hover { transform: translateY(-2px); }
-    .btn-rate { border: none; border-radius: 12px; transition: transform 0.1s; }
-    .btn-rate:hover { transform: translateY(-3px); filter: brightness(115%); }
-    .time-label { display: block; font-size: 0.75rem; opacity: 0.9; margin-top: 2px; }
-
-    /* Animation */
-    .fade-in-up { animation: fadeInUp 0.4s ease forwards; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    
-    .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-    .animate-bounce { animation: bounce 2s infinite; }
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-        40% {transform: translateY(-10px);}
-        60% {transform: translateY(-5px);}
-    }
-
-    /* Các class màu sắc cho text trên nền trắng */
-    .text-secondary-light { color: #6c757d; } 
-    
-    /* Hover text effect */
-    .cursor-pointer { cursor: pointer; }
-    .hover-text-primary:hover { color: #0d6efd !important; }
-    .hover-text-primary:hover .text-dark { color: #0d6efd !important; }
-</style>
 {% endblock %}

@@ -1,0 +1,334 @@
+/* ==========================================================================
+   1. GLOBAL & BASE LAYOUT (Dùng chung cho mọi trang)
+   ========================================================================== */
+body {
+    background-color: #fafafa;
+    /* Font mặc định nếu muốn thêm: font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+}
+
+/* NAVBAR */
+.navbar-custom {
+    background-color: #fff;
+    border-bottom: 1px solid #e4e4e4;
+    padding: 12px 0;
+}
+.navbar-brand {
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: -1px;
+}
+.nav-link {
+    font-weight: 600;
+    color: #666;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transition: 0.25s;
+}
+.nav-link:hover {
+    color: #58cc02;
+}
+.nav-link.active {
+    color: #58cc02;
+    border-bottom: 3px solid #58cc02;
+}
+.profile-img {
+    border: 2px solid #58cc02 !important;
+}
+
+/* DROPDOWN */
+.dropdown-menu {
+    border-radius: 12px;
+    padding: 10px 0;
+}
+.dropdown-item {
+    padding: 10px 18px;
+    font-weight: 500;
+}
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+/* FOOTER */
+.footer-custom {
+    background: #f8f9fa;
+    padding: 35px 0;
+    border-top: 1px solid #e1e1e1;
+    margin-top: auto;
+    font-size: 0.95rem;
+}
+.footer-custom p {
+    margin: 4px 0;
+}
+
+/* UTILITIES (Tiện ích dùng chung) */
+.cursor-pointer { cursor: pointer; }
+.op-50 { opacity: 0.5; }
+.pointer-events-none { pointer-events: none; }
+.smaller { font-size: 0.75rem; }
+
+/* ==========================================================================
+   2. AUTH PAGES (Login & Register)
+   ========================================================================== */
+/* Lưu ý: Thêm class="auth-body" vào thẻ <body> của login.html và register.html để nhận style này */
+body.auth-body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.btn-green {
+    background-color: #58cc02;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+}
+.btn-green:hover {
+    background-color: #46a302;
+    color: white;
+}
+
+/* ==========================================================================
+   3. ANIMATIONS & EFFECTS (Hiệu ứng động)
+   ========================================================================== */
+/* Hover Effects */
+.hover-scale { transition: transform 0.3s ease; }
+.hover-scale:hover { transform: scale(1.05); }
+
+.hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.hover-lift:hover { transform: translateY(-10px); box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important; }
+
+.hover-slide-right { transition: transform 0.3s ease; }
+.hover-slide-right:hover { transform: translateX(10px); }
+
+/* Keyframes Animations */
+.animate-bounce { animation: bounce 2s infinite; }
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-20px);}
+    60% {transform: translateY(-10px);}
+}
+
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; transform: translateY(10px); }
+@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+.animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.animate-pulse { animation: pulse 1.5s infinite; }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.hover-float { transition: transform 0.3s ease; animation: float 6s ease-in-out infinite; }
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+.fade-in-up { animation: fadeInUp 0.4s ease forwards; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ==========================================================================
+   4. HOME PAGE (Trang chủ)
+   ========================================================================== */
+.feature-card { /* Class giả định cho các thẻ tính năng nếu cần style riêng */ }
+.icon-circle {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+.hover-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.hover-card:hover { transform: translateY(-5px); box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1) !important; }
+
+/* ==========================================================================
+   5. COMMUNITY PAGE (Cộng đồng)
+   ========================================================================== */
+.transition-hover { transition: transform 0.2s; }
+.transition-hover:hover { transform: translateY(-2px); }
+
+.post-card { transition: box-shadow 0.3s ease; }
+.post-card:hover { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.08) !important; }
+
+.action-btn { transition: background-color 0.2s; border: 1px solid transparent; }
+.action-btn:hover { background-color: #e9ecef; }
+.active-like { background-color: #fce8e8; border-color: #f8d7da; }
+
+.heart-beat { animation: heartBeat 0.3s ease-in-out; }
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Stagger animation */
+.post-card:nth-child(1) { animation-delay: 0.1s; }
+.post-card:nth-child(2) { animation-delay: 0.2s; }
+.post-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* ==========================================================================
+   6. STATS PAGE (Thống kê)
+   ========================================================================== */
+.icon-box {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
+}
+/* Đổi tên class hover của stats để tránh trùng lặp với community */
+.hover-elevate {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.hover-elevate:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+    border-color: transparent !important;
+}
+
+.chart-col {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    width: 18%;
+    position: relative;
+}
+.bar {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.bar:hover { opacity: 1; transform: scaleY(1.05); cursor: pointer; }
+
+.label {
+    font-size: 0.75rem; font-weight: 700; color: #6c757d;
+    text-transform: uppercase; text-align: center; letter-spacing: 0.5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.value-tooltip { font-weight: 800; font-size: 1.1rem; }
+.bg-gradient-primary { background: linear-gradient(135deg, #4f46e5, #3b82f6); }
+
+/* ==========================================================================
+   7. STUDY & FLASHCARDS (Học & Ôn tập)
+   ========================================================================== */
+/* Study Page */
+.flashcard-container { perspective: 1000px; cursor: pointer; height: 500px; }
+.flashcard {
+    width: 100%; height: 100%; position: relative;
+    transition: transform 0.6s; transform-style: preserve-3d;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.flashcard .front, .flashcard .back {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; top: 0; left: 0;
+    background-color: #ffffff;
+}
+.flashcard .back { transform: rotateY(180deg); }
+
+.btn-rate { border: none; border-radius: 12px; transition: transform 0.1s; }
+.btn-rate:hover { transform: translateY(-3px); filter: brightness(115%); }
+.time-label { display: block; font-size: 0.75rem; opacity: 0.9; margin-top: 2px; }
+
+.text-secondary-light { color: #6c757d; }
+.hover-text-primary:hover { color: #0d6efd !important; }
+.hover-text-primary:hover .text-dark { color: #0d6efd !important; }
+
+/* Review Page */
+.text-primary { color: #0d6efd !important; }
+.text-info { color: #0dcaf0 !important; }
+#qzInput {
+    background-color: #fff; border: 2px solid #dee2e6;
+    color: #212529; font-size: 1.1rem;
+}
+#qzInput:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+.small-btn { font-size: 0.8rem; padding: 4px 10px; }
+
+/* ==========================================================================
+   8. DICTATION (Nghe chép chính tả)
+   ========================================================================== */
+.btn-dark-blue { background-color: #2c3e50; color: white; border: none; }
+.btn-dark-blue:hover { background-color: #1a252f; color: white; }
+
+.btn-info-light { background-color: #3498db; color: white; border: none; }
+.btn-info-light:hover { background-color: #2980b9; color: white; }
+
+.transition-bg { transition: background-color 0.2s; border-left: 4px solid transparent; }
+.transition-all { transition: all 0.3s; }
+
+#mainInput:focus { box-shadow: none; border: 1px solid #3498db !important; background-color: #fff !important; }
+.shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
+
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+/* Shadowing Animation */
+.wave-bar {
+    width: 6px; background-color: #dc3545;
+    animation: wave 1s ease-in-out infinite; border-radius: 4px;
+}
+.wave-bar:nth-child(1) { animation-delay: 0.1s; height: 40%; }
+.wave-bar:nth-child(2) { animation-delay: 0.2s; height: 60%; }
+.wave-bar:nth-child(3) { animation-delay: 0.3s; height: 100%; }
+.wave-bar:nth-child(4) { animation-delay: 0.2s; height: 70%; }
+.wave-bar:nth-child(5) { animation-delay: 0.1s; height: 50%; }
+
+@keyframes wave {
+    0%, 100% { transform: scaleY(0.5); }
+    50% { transform: scaleY(1); }
+}
+
+.btn-recording {
+    background-color: #dc3545 !important;
+    color: white !important;
+    box-shadow: 0 0 0 5px rgba(220, 53, 69, 0.3) !important;
+    animation: pulse-red 1.5s infinite;
+}
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+/* ==========================================================================
+   9. LIBRARY & TOPICS (Thư viện)
+   ========================================================================== */
+.video-card { transition: transform 0.2s, box-shadow 0.2s; background: #fff; }
+.video-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+
+.play-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.2);
+    opacity: 0; transition: opacity 0.3s;
+}
+.video-card:hover .play-overlay { opacity: 1; }
+.video-card:hover .play-overlay div { transform: scale(1.1); }
+
+/* Vocabulary Sets */
+.set-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 15px; background: #fff;
+}
+.set-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* ==========================================================================
+   10. LEADERBOARD (Bảng xếp hạng)
+   ========================================================================== */
+.hover-bg { transition: background-color 0.2s, transform 0.2s; }
+.hover-bg:hover { background-color: #f8f9fa; transform: scale(1.01); }

@@ -5,7 +5,7 @@ import json
 import os
 
 app = Flask(__name__)
-app.secret_key = 'mat_khau_bi_mat_cua_app'  # Thay bằng chuỗi bí mật của bạn
+app.secret_key = '180306'
 
 # Cấu hình Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'

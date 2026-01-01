@@ -145,7 +145,6 @@ body.auth-body {
 /* ==========================================================================
    4. HOME PAGE (Trang chủ)
    ========================================================================== */
-.feature-card { /* Class giả định cho các thẻ tính năng nếu cần style riêng */ }
 .icon-circle {
     width: 60px; height: 60px;
     border-radius: 50%;

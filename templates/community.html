@@ -110,7 +110,10 @@
                         </button>
 
                         {% if not post.original and post.author.username != session['user'] %}
-                        <a href="/share_post/{{ post.id }}" class="btn btn-light rounded-pill px-3 flex-grow-1 action-btn" onclick="return confirm('Bạn có muốn chia sẻ bài viết này về trang cá nhân?');">
+                        <a href="javascript:void(0);" 
+                           data-share-url="/share_post/{{ post.id }}"
+                           class="btn btn-light rounded-pill px-3 flex-grow-1 action-btn" 
+                           onclick="confirmShare(this)">
                             <i class="fas fa-share text-secondary"></i>
                             <span class="ms-1 fw-bold text-secondary">Chia sẻ</span>
                         </a>
@@ -148,5 +151,31 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmShare(buttonElement) {
+        // Lấy đường dẫn chia sẻ từ thuộc tính data-share-url
+        const shareUrl = buttonElement.getAttribute('data-share-url');
+
+        // Hiện Pop-up đẹp
+        Swal.fire({
+            title: 'Chia sẻ bài viết?',
+            text: "Bài viết này sẽ xuất hiện trên trang cá nhân của bạn.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#198754', // Màu xanh lá
+            cancelButtonColor: '#6c757d',  // Màu xám
+            confirmButtonText: 'Đồng ý, chia sẻ!',
+            cancelButtonText: 'Hủy bỏ'
+        }).then((result) => {
+            // Nếu người dùng chọn Đồng ý
+            if (result.isConfirmed) {
+                // Chuyển hướng đến link chia sẻ
+                window.location.href = shareUrl;
+            }
+        });
+    }
+</script>
 
 {% endblock %}

@@ -5,7 +5,6 @@
 {% block content %}
 
 <div class="container py-5">
-    <!-- KHỐI DASHBOARD CHÍNH (NỀN TRẮNG) -->
     <div class="dashboard-wrapper p-4 p-lg-5 rounded-5 shadow-sm bg-white mb-5 position-relative overflow-hidden border">
         
         <div class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-3">
@@ -20,11 +19,9 @@
 
         <div class="row g-5">
             
-            <!-- CỘT TRÁI: CÁC CARD THỐNG KÊ (GRID 2x2) -->
             <div class="col-lg-7">
                 <div class="row g-4 mb-4">
                     
-                    <!-- Card 1: Tổng số thẻ -->
                     <div class="col-md-6">
                         <div class="stat-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between bg-light border hover-elevate">
                             <div class="d-flex justify-content-between align-items-start mb-3">
@@ -40,7 +37,6 @@
                         </div>
                     </div>
 
-                    <!-- Card 2: Đến hạn -->
                     <div class="col-md-6">
                         <div class="stat-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between bg-light border hover-elevate">
                             <div class="d-flex justify-content-between align-items-start mb-3">
@@ -56,7 +52,6 @@
                         </div>
                     </div>
 
-                    <!-- Card 3: Lượt ôn tập -->
                     <div class="col-md-6">
                         <div class="stat-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between bg-white border shadow-sm hover-elevate">
                             <div class="d-flex align-items-center mb-3 text-info">
@@ -70,7 +65,6 @@
                         </div>
                     </div>
 
-                    <!-- Card 4: Độ chính xác -->
                     <div class="col-md-6">
                         <div class="stat-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between bg-white border shadow-sm hover-elevate">
                             <div class="d-flex align-items-center mb-3 text-success">
@@ -85,7 +79,6 @@
                     </div>
                 </div>
 
-                <!-- CALL TO ACTION -->
                 <div class="cta-box p-4 rounded-4 d-flex align-items-center justify-content-between position-relative overflow-hidden text-white shadow">
                     <div class="d-flex align-items-center position-relative z-1">
                         <div class="icon-box bg-white text-primary rounded-circle me-3 shadow-sm">
@@ -98,47 +91,45 @@
                     </div>
                     <a href="/vocabulary" class="btn btn-light rounded-pill fw-bold px-4 shadow-sm position-relative z-1 text-primary">Học ngay</a>
                     
-                    <!-- Background gradient -->
                     <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-primary"></div>
                 </div>
             </div>
 
-            <!-- CỘT PHẢI: BIỂU ĐỒ (VISUALIZER) -->
             <div class="col-lg-5">
-                <div class="bg-light p-4 rounded-4 h-100 border d-flex flex-column">
-                    <h5 class="fw-bold mb-4 text-dark border-bottom pb-2">Trạng Thái Từ Vựng</h5>
+                <div class="bg-light p-4 rounded-4 h-100 border d-flex flex-column shadow-sm">
+                    <h5 class="fw-bold mb-4 text-dark border-bottom pb-2">
+                        <i class="fas fa-chart-pie me-2 text-primary"></i>Phân bổ từ vựng
+                    </h5>
                     
-                    <!-- Chart Area: Sử dụng Flexbox để căn đáy đều nhau -->
-                    <div class="chart-area flex-grow-1 d-flex align-items-end justify-content-between px-2 pb-2" style="min-height: 300px;">
+                    <div class="chart-container flex-grow-1 position-relative w-100" style="min-height: 300px;">
+                        <canvas id="vocabChart"></canvas>
                         
-                        <!-- Cột 1 -->
-                        <div class="chart-col">
-                            <div class="value-tooltip mb-2 text-info">{{ stats.learning }}</div>
-                            <div class="bar bg-info bg-opacity-75" style="height: {{ stats.learning * 15 + 15 }}px;"></div>
-                            <div class="label mt-3 text-truncate w-100" title="Đang học">Đang học</div>
+                        <div class="position-absolute top-50 start-50 translate-middle text-center" style="pointer-events: none;">
+                            <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Tổng cộng</small>
+                            <h3 class="fw-bold text-dark mb-0">{{ stats.total_vocab }}</h3>
+                            <small class="text-muted">từ</small>
                         </div>
+                    </div>
 
-                        <!-- Cột 2 -->
-                        <div class="chart-col">
-                            <div class="value-tooltip mb-2 text-primary">{{ stats.reviewing }}</div>
-                            <div class="bar bg-primary bg-opacity-75" style="height: {{ stats.reviewing * 15 + 10 }}px;"></div>
-                            <div class="label mt-3 text-truncate w-100" title="Ôn tập">Ôn tập</div>
+                    <div class="row text-center mt-3 g-2">
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-white border">
+                                <div class="text-info fw-bold small">Đang học</div>
+                                <div class="fw-bold">{{ stats.learning }}</div>
+                            </div>
                         </div>
-
-                        <!-- Cột 3 -->
-                        <div class="chart-col">
-                            <div class="value-tooltip mb-2 text-success">{{ stats.mastered }}</div>
-                            <div class="bar bg-success bg-opacity-75" style="height: {{ stats.mastered * 15 + 10 }}px;"></div>
-                            <div class="label mt-3 text-truncate w-100" title="Thành thạo">Thành thạo</div>
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-white border">
+                                <div class="text-warning fw-bold small">Cần ôn</div>
+                                <div class="fw-bold">{{ stats.reviewing }}</div>
+                            </div>
                         </div>
-
-                        <!-- Cột 4 -->
-                        <div class="chart-col">
-                            <div class="value-tooltip mb-2 text-danger">{{ stats.total_vocab }}</div>
-                            <div class="bar bg-danger bg-opacity-75" style="height: {{ stats.total_vocab * 15 + 15 }}px;"></div>
-                            <div class="label mt-3 text-truncate w-100" title="Tổng số">Tổng số</div>
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-white border">
+                                <div class="text-success fw-bold small">Thành thạo</div>
+                                <div class="fw-bold">{{ stats.mastered }}</div>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -146,5 +137,60 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('vocabChart').getContext('2d');
+        
+        // Lấy dữ liệu từ Flask truyền sang
+        const dataLearning = {{ stats.learning|default(0) }};
+        const dataReviewing = {{ stats.reviewing|default(0) }};
+        const dataMastered = {{ stats.mastered|default(0) }};
+
+        new Chart(ctx, {
+            type: 'doughnut', // Biểu đồ tròn rỗng ruột
+            data: {
+                labels: ['Đang học', 'Cần ôn tập', 'Đã thành thạo'],
+                datasets: [{
+                    data: [dataLearning, dataReviewing, dataMastered],
+                    backgroundColor: [
+                        '#0dcaf0', // Màu Info (Đang học)
+                        '#ffc107', // Màu Warning (Cần ôn)
+                        '#198754'  // Màu Success (Thành thạo)
+                    ],
+                    hoverOffset: 10,
+                    borderWidth: 0, // Bỏ viền trắng để đẹp hơn
+                    borderRadius: 5 // Bo tròn các cạnh của biểu đồ
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Để nó tự co giãn theo khung div cha
+                cutout: '75%', // Độ rỗng ở giữa (càng lớn càng mỏng)
+                plugins: {
+                    legend: {
+                        display: false // Ẩn chú thích mặc định của ChartJS vì ta đã làm chú thích đẹp bên dưới
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                let value = context.raw;
+                                label += value + ' từ';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 {% endblock %}
